@@ -26,9 +26,14 @@ include_directories(${CMAKE_BINARY_DIR}/lib/installed/${CMAKE_INSTALL_INCLUDEDIR
 # This is required for googletest
 find_package(Threads REQUIRED)
 find_package(PCL 1.14 REQUIRED)
+
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
+
+find_package(Eigen3 3.4 REQUIRED )
+include_directories( ${EIGEN3_INCLUDE_DIR} )
+
 # Test
 add_executable(math_test test/math_test.cc)
 target_link_libraries(math_test math gtest Threads::Threads)

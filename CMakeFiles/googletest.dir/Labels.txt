@@ -1,0 +1,13 @@
+# Target labels
+ googletest
+# Source files and their labels
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/CMakeFiles/googletest
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/CMakeFiles/googletest.rule
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/CMakeFiles/googletest-complete.rule
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib/src/googletest-stamp/googletest-build.rule
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib/src/googletest-stamp/googletest-configure.rule
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib/src/googletest-stamp/googletest-download.rule
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib/src/googletest-stamp/googletest-install.rule
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib/src/googletest-stamp/googletest-mkdir.rule
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib/src/googletest-stamp/googletest-patch.rule
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib/src/googletest-stamp/googletest-update.rule

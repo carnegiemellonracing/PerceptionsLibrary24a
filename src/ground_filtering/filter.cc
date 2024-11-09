@@ -15,13 +15,21 @@ pcl::PointCloud<pcl::PointXYZ> GraceAndConrad(pcl::PointCloud<pcl::PointXYZ> clo
                   int points_ground, int alpha, int num_bins, int height_threshold) {
     
     std::vector<float> angles;
-    for (const auto& point : cloud) {
-        // Use atan2(y, x) to calculate the angle in radians
-        float angle = std::atan2(cloud.y, cloud.x);
+        std::vector<float> angles;
 
-        // Store the angle in the vector
+    for (const auto& point : cloud) {
+        float angle = std::atan2(cloud.y, cloud.x);
         angles.push_back(angle);
     }
+    for (const float& value : angles) {
+
+    }
+    
+
+
+
+
+
 
 
 }

@@ -3,7 +3,6 @@
 
 #include "math.h"
 #include "filter.h"
-#include <cmath>
 
 
 
@@ -45,13 +44,13 @@ pcl::PointCloud<pcl::PointXYZ> GraceAndConrad(pcl::PointCloud<pcl::PointXYZ>::Pt
     double angle_max = *std::max_element(angles.begin(), angles.end());
     int M = static_cast<int>((angle_max - angle_min) / alpha);
     std::vector<double> gangles(M);
-    for (int i = 0; i < M; ++i) {
+    for (int i = 0; i < M; i++) {
         gangles[i] = angle_min + i * alpha;
     }
 
     // Map angles to segments
     std::vector<int> segments(angles.size());
-    for (size_t i = 0; i < angles.size(); ++i) {
+    for (size_t i = 0; i < angles.size(); i++) {
         segments[i] = static_cast<int>((angles[i] - angle_min) / alpha);
     }
 
@@ -61,24 +60,24 @@ pcl::PointCloud<pcl::PointXYZ> GraceAndConrad(pcl::PointCloud<pcl::PointXYZ>::Pt
     double bin_size = (rmax - rmin) / num_bins;
     int N = num_bins;
     std::vector<double> rbins(N);
-    for (int i = 0; i < N; ++i) {
+    for (int i = 0; i < N; i++) {
         rbins[i] = rmin + i * bin_size;
     }
 
     // Map ranges to regments
     std::vector<int> regments(ranges.size());
-    for (size_t i = 0; i < ranges.size(); ++i) {
+    for (size_t i = 0; i < ranges.size(); i++) {
         regments[i] = static_cast<int>((ranges[i] - rmin) / bin_size);
     }
 
     // Calculate grid cell indices
     std::vector<int> grid_cell_indices(segments.size());
-    for (size_t i = 0; i < segments.size(); ++i) {
+    for (size_t i = 0; i < segments.size(); i++) {
         grid_cell_indices[i] = segments[i] * N + regments[i];
     }
 
     // Process each segment
-    for (int seg_idx = 0; seg_idx < M; ++seg_idx) {
+    for (int seg_idx = 0; seg_idx < M; seg_idx++) {
         std::vector<std::pair<double, double>> Bines;
         std::vector<double> min_zs;
 
@@ -87,7 +86,7 @@ pcl::PointCloud<pcl::PointXYZ> GraceAndConrad(pcl::PointCloud<pcl::PointXYZ>::Pt
 
             // Get points in the current bin
             std::vector<int> idxs;
-            for (size_t i = 0; i < grid_cell_indices.size(); ++i) {
+            for (size_t i = 0; i < grid_cell_indices.size(); i++) {
                 if (grid_cell_indices[i] == bin_idx) {
                     idxs.push_back(i);
                 }
@@ -124,7 +123,7 @@ pcl::PointCloud<pcl::PointXYZ> GraceAndConrad(pcl::PointCloud<pcl::PointXYZ>::Pt
             double intercept = (sum_y - slope * sum_x) / n;
 
             // Filter points in the segment
-            for (size_t i = 0; i < cloud->points.size(); ++i) {
+            for (size_t i = 0; i < cloud->points.size(); i++) {
                 if (segments[i] == seg_idx) {
                     double expected_z = slope * ranges[i] + intercept;
                     if (cloud->points[i].z > expected_z + height_threshold) {
@@ -168,9 +167,6 @@ pcl::PointCloud<pcl::PointXYZ> filter::fov_range(pcl::PointCloud<pcl::PointXYZ> 
   double minradius = 0;
   double maxradius = 30;
   double rad_to_deg = 180 / M_PI;
-  pcl::PointCloud<pcl::PointXYZ> cloud_radius_filtered;
-
-  outrem.filter(*cloud_radius_filtered);
 }
 
 pcl::PointCloud<pcl::PointXYZ> filter::random_subset(pcl::PointCloud<pcl::PointXYZ> cloud) {

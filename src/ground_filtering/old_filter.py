@@ -6,13 +6,15 @@ from skspatial.objects import Plane
 import time
 import perc22a.predictors.utils.lidar.visualization as vis
 
+"used functions: GraceAndConrad, plane_fit, fov_range, vox_downsample"
+
 def trim_cloud(points, return_mask=False):
     """
     Trims a cloud of points to reduce to a point cloud of only cone points
     by performing a naive implementation that goes as follows
         1. mask out all points that exceed a specific radius from the center
         2. mask out all points that are too close to the lidar (likely car)
-        3. mask out all points that are in the ground or too high
+        3.x mask out all points that are in the ground or too high
             - this is done by measuring point distance from a
               pre-defined plane
         4. mask out all points that are outside of a specific FOV angle
@@ -550,6 +552,8 @@ def fov_range(pointcloud, fov=180, minradius=0, maxradius=30):
 
     Return: filtered point cloud where all points outside of fov are removed
     '''
+
+
     RAD_TO_DEG = 180 / math.pi
 
     # remove points of too large radius

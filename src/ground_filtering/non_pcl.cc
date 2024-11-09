@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
-#include <corecrt_math_defines.h>
 
 typedef struct point {
   double x;
@@ -46,17 +45,18 @@ void GAC(std::vector<point_t> cloud, double alpha,
   std::vector<point_t> filtered_cloud = {};
 
   const double angle_min = 0;
-  const double angle_max = 180;
+  const double angle_max = M_PI;
   int num_segs = static_cast<int>((angle_max - angle_min) / alpha);
   std::vector<std::vector<radial_t>> segments(num_segs); 
 
   for (int i = 0; i < cloud.size(); i++) {
     radial_t rd = point2radial(cloud[i]);
+    printf("Pushing (%f,%f,%f) to %d\n", cloud[i].x, cloud[i].y, cloud[i].z, static_cast<int>(rd.angle / alpha));
     segments[static_cast<int>(rd.angle / alpha)].push_back(rd);
   }
 
   for (int i = 0; i < segments.size(); i++) {
-    printf("%d", segments[i].size());
+    printf("Show (%d): %d\n", i, segments[i].size());
   }
   
   /*
@@ -148,4 +148,5 @@ int main() {
   std::vector<point_t> cloud;
   cloud.push_back({-5, 10, 0});
   cloud.push_back({10, 5, 0});
+  GAC(cloud, M_PI / 4, 10, 10);
 }

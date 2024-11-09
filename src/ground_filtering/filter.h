@@ -1,5 +1,10 @@
 #pragma once
 
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include "math.h"
+
 namespace filter {
 
   pcl::PointCloud<pcl::PointXYZ> cloud;

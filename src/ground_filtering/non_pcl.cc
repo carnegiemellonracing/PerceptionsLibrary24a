@@ -2,6 +2,8 @@
 #include <vector>
 #include <cmath>
 
+using namespace std;
+
 typedef struct point {
   double x;
   double y;
@@ -38,26 +40,31 @@ point_t radial2point(radial_t rd) {
  * @param height_threshold:
  * @return std::vector<point_t>
  */
-void GAC(std::vector<point_t> cloud, double alpha, 
+void GAC(vector<point_t> cloud, double alpha, 
                          int num_bins, double height_threshold) {
-    
-  // Convert all points to radials and find min/max angle
-  std::vector<point_t> filtered_cloud = {};
 
   const double angle_min = 0;
   const double angle_max = M_PI;
+  const double radius_max = 30;
   int num_segs = static_cast<int>((angle_max - angle_min) / alpha);
-  std::vector<std::vector<radial_t>> segments(num_segs); 
+  vector<vector<vector<radial_t>>> segments(num_segs, vector<vector<radial_t>>(num_bins));
 
+  // Parse all points from XYZ to radial,Z and separate into bins
   for (int i = 0; i < cloud.size(); i++) {
     radial_t rd = point2radial(cloud[i]);
-    printf("Pushing (%f,%f,%f) to %d\n", cloud[i].x, cloud[i].y, cloud[i].z, static_cast<int>(rd.angle / alpha));
-    segments[static_cast<int>(rd.angle / alpha)].push_back(rd);
+    int seg_index = static_cast<int>(rd.angle / alpha);
+    int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
+    segments[seg_index][bin_index].push_back(rd);
   }
 
+  // Test code
   for (int i = 0; i < segments.size(); i++) {
-    printf("Show (%d): %d\n", i, segments[i].size());
+    for (int j = 0; j < segments[0].size(); j++) {
+      printf("Show (%d,%d): %d\n", i, j, segments[i][j].size());
+    }
   }
+
+  // TODO: Begin GraceAndConrad algorithm
   
   /*
   // Map angles to segments
@@ -144,9 +151,10 @@ void GAC(std::vector<point_t> cloud, double alpha,
   return;
 }
 
+// Test code
 int main() {
   std::vector<point_t> cloud;
   cloud.push_back({-5, 10, 0});
-  cloud.push_back({10, 5, 0});
-  GAC(cloud, M_PI / 4, 10, 10);
+  cloud.push_back({20, 5, 0});
+  GAC(cloud, M_PI / 4, 2, 10);
 }

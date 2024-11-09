@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include "math.h"
+#include <corecrt_math_defines.h>
 
 typedef struct point {
   double x;
@@ -35,8 +37,9 @@ point_t radial2point(radial_t rd) {
  * @param alpha: 
  * @param num_bins: 
  * @param height_threshold:
+ * @return std::vector<point_t>
  */
-std::vector<point_t> GAC(std::vector<point_t> cloud, double alpha, 
+void GAC(std::vector<point_t> cloud, double alpha, 
                          int num_bins, double height_threshold) {
     
   // Convert all points to radials and find min/max angle
@@ -134,11 +137,11 @@ std::vector<point_t> GAC(std::vector<point_t> cloud, double alpha,
   // filtered_cloud.height = 1;
   // filtered_cloud.is_dense = true;
   */
-  return NULL;
+  return;
 }
 
 int main() {
-    std::vector<point_t> cloud;
-    clo
-    d.push_back;
+  std::vector<point_t> cloud;
+  cloud.push_back({-5, 10, 0});
+  cloud.push_back({10, 5, 0});
 }

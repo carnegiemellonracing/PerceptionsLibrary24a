@@ -19,11 +19,9 @@ typedef struct radial {
 radial_t point2radial(point_t pt) {
   radial_t rd;
   rd.angle = std::atan2(pt.y, pt.x);
-  if (rd.angle < 0) {
-    rd.angle += 2 * M_PI;
-  }
   rd.radius = std::sqrt(pt.x * pt.x + pt.y * pt.y);
   rd.z = pt.z;
+  // printf("(%f,%f,%f)\n", rd.radius, rd.angle * 180 / M_PI, rd.z);
   return rd;
 }
 
@@ -35,16 +33,16 @@ point_t radial2point(radial_t rd) {
 /**
  * Function implementing the GraceAndConrad algorithm
  * @param cloud: The vector of rectangular points to parse
- * @param alpha: 
- * @param num_bins: 
- * @param height_threshold:
+ * @param alpha: The size of each segment (radians)
+ * @param num_bins: The number of bins per segment
+ * @param height_threshold: Keep all points this distance above the best fit line
  * @return std::vector<point_t>
  */
 void GAC(vector<point_t> cloud, double alpha, 
                          int num_bins, double height_threshold) {
 
-  const double angle_min = 0;
-  const double angle_max = M_PI;
+  const double angle_min = -0.5 * M_PI;
+  const double angle_max = 0.5 * M_PI;
   const double radius_max = 30;
   int num_segs = static_cast<int>((angle_max - angle_min) / alpha);
   vector<vector<vector<radial_t>>> segments(num_segs, vector<vector<radial_t>>(num_bins));
@@ -52,47 +50,23 @@ void GAC(vector<point_t> cloud, double alpha,
   // Parse all points from XYZ to radial,Z and separate into bins
   for (int i = 0; i < cloud.size(); i++) {
     radial_t rd = point2radial(cloud[i]);
-    int seg_index = static_cast<int>(rd.angle / alpha);
+    int seg_index = static_cast<int>(rd.angle / alpha) + num_segs / 2 - (rd.angle < 0);
     int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
     segments[seg_index][bin_index].push_back(rd);
   }
 
   // Test code
   for (int i = 0; i < segments.size(); i++) {
-    for (int j = 0; j < segments[0].size(); j++) {
-      printf("Show (%d,%d): %d\n", i, j, segments[i][j].size());
+    for (int j = 0; j < segments[i].size(); j++) {
+      printf("Segbin (%d,%d):\n", i, j);
+      for (int k = 0; k < segments[i][j].size(); k++) {
+        printf("(%f,%f,%f)\n", segments[i][j][k].radius, segments[i][j][k].angle * 180 / M_PI, segments[i][j][k].z);
+      }
     }
   }
 
   // TODO: Begin GraceAndConrad algorithm
-  
   /*
-  // Map angles to segments
-  std::vector<int> segments(angles.size());
-
-  for (size_t i = 0; i < angles.size(); ++i) {
-      segments[i] = static_cast<int>((angles[i] - angle_min) / alpha);
-  }
-  
-  // Create range bins
-  double rmin = *std::min_element(ranges.begin(), ranges.end());
-  double rmax = *std::max_element(ranges.begin(), ranges.end());
-  double bin_size = (rmax - rmin) / num_bins;
-  int num_bins = num_bins;
-  std::vector<double> rbins(num_bins);
-  for (int i = 0; i < num_bins; ++i) {
-      rbins[i] = rmin + i * bin_size;
-  }
-  // Map ranges to regments
-  std::vector<int> regments(ranges.size());
-  for (size_t i = 0; i < ranges.size(); ++i) {
-      regments[i] = static_cast<int>((ranges[i] - rmin) / bin_size);
-  }
-  // Calculate grid cell indices
-  std::vector<int> grid_cell_indices(segments.size());
-  for (size_t i = 0; i < segments.size(); ++i) {
-      grid_cell_indices[i] = segments[i] * num_bins + regments[i];
-  }
   // Process each segment
   for (int seg_idx = 0; seg_idx < M; ++seg_idx) {
       std::vector<std::pair<double, double>> Bines;
@@ -154,7 +128,38 @@ void GAC(vector<point_t> cloud, double alpha,
 // Test code
 int main() {
   std::vector<point_t> cloud;
-  cloud.push_back({-5, 10, 0});
-  cloud.push_back({20, 5, 0});
+  cloud.push_back({10, 5, 0});
+  cloud.push_back({5, -20, 0});
   GAC(cloud, M_PI / 4, 2, 10);
 }
+
+
+  
+  /*
+  // Map angles to segments
+  std::vector<int> segments(angles.size());
+
+  for (size_t i = 0; i < angles.size(); ++i) {
+      segments[i] = static_cast<int>((angles[i] - angle_min) / alpha);
+  }
+  
+  // Create range bins
+  double rmin = *std::min_element(ranges.begin(), ranges.end());
+  double rmax = *std::max_element(ranges.begin(), ranges.end());
+  double bin_size = (rmax - rmin) / num_bins;
+  int num_bins = num_bins;
+  std::vector<double> rbins(num_bins);
+  for (int i = 0; i < num_bins; ++i) {
+      rbins[i] = rmin + i * bin_size;
+  }
+  // Map ranges to regments
+  std::vector<int> regments(ranges.size());
+  for (size_t i = 0; i < ranges.size(); ++i) {
+      regments[i] = static_cast<int>((ranges[i] - rmin) / bin_size);
+  }
+  // Calculate grid cell indices
+  std::vector<int> grid_cell_indices(segments.size());
+  for (size_t i = 0; i < segments.size(); ++i) {
+      grid_cell_indices[i] = segments[i] * num_bins + regments[i];
+  }
+  */

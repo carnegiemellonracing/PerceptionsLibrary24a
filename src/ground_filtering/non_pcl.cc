@@ -1,4 +1,6 @@
 #include <iostream>
+#include <numeric>
+#include <algorithm>
 #include <vector>
 #include <cmath>
 
@@ -16,6 +18,11 @@ typedef struct radial {
   double z;
 } radial_t;
 
+/**
+ * Converts (x,y,z) to (radius,ang,z), where ang is in radians
+ * @param pt: The (x,y,z) point to convert
+ * @return the converted point
+ */
 radial_t point2radial(point_t pt) {
   radial_t rd;
   rd.angle = std::atan2(pt.y, pt.x);
@@ -25,9 +32,35 @@ radial_t point2radial(point_t pt) {
   return rd;
 }
 
+/**
+ * Converts (radius,ang,z) to (x,y,z), where ang is in radians
+ * TODO: finish this
+ * @param rd: The (radius,ang,z) point to convert
+ * @return the converted point
+ */
 point_t radial2point(radial_t rd) {
   point_t pt;
   return pt;
+}
+
+/**
+ * Gets the minimum point in a bin
+ * @param bin: The bin to search
+ * @return the point with the lowest z
+ */
+radial_t min_height(vector<radial_t> bin) {
+  int size = bin.size();
+  if (size == 0) {
+    return {-100, -100, -100};
+  }
+
+  radial_t mini = bin[0];
+  for (int i = 0; i < size; i++) {
+    if (bin[i].z < mini.z) {
+      mini = bin[i];
+    }
+  }
+  return mini;
 }
 
 /**
@@ -53,6 +86,34 @@ void GAC(vector<point_t> cloud, double alpha,
     int seg_index = static_cast<int>(rd.angle / alpha) + num_segs / 2 - (rd.angle < 0);
     int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
     segments[seg_index][bin_index].push_back(rd);
+  }
+
+  // Grace and Conrad Algorithm
+  for (int seg = 0; seg < num_segs; seg++) {
+    // Extract minimum points in each bin
+    vector<double> minis_rad = {};
+    vector<double> minis_z = {};
+    for (int bin = 0; bin < num_bins; bin++) {
+      radial_t mini = min_height(segments[seg][bin]);
+      if (mini.radius != -100) {
+        minis_rad.push_back(mini.radius);
+        minis_z.push_back(mini.z);
+      }
+    }
+    // Perform linear regression (our own implementation for speed)
+    double rad_bar = reduce(minis_rad.begin(), minis_rad.end()) / minis_rad.size();
+    double z_bar = reduce(minis_z.begin(), minis_z.end()) / minis_z.size();
+
+    // TODO: Fix all thisgi
+    for_each(minis_rad.begin(), minis_rad.end(), [rad_bar](int &n) { n -= rad_bar; });
+    for_each(minis_z.begin(), minis_z.end(), [z_bar](int &n) { n -= z_bar; });
+    double squaresum = 0;
+    for (int i = 0; i < minis_rad.size(); i++) {
+      squaresum += rad_bar * [i];
+    }
+
+    slope = np.sum(x_dev * y_dev) / np.sum(x_dev * x_dev) if ss != 0 else 0
+    intercept = y_bar - slope * x_bar
   }
 
   // Test code
@@ -162,4 +223,52 @@ int main() {
   for (size_t i = 0; i < segments.size(); ++i) {
       grid_cell_indices[i] = segments[i] * num_bins + regments[i];
   }
+  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /*
+  Your name is perfume poured out.
+  Your cheeks are comely with ornaments, your neck with strings of jewels.
+  Your eyes are doves.
+  Your teeth are like a flock of shorn ewes that have come up from the washing, all of which bear twins, and not one among them is bereaved.
+  Your lips are like a crimson thread, and your mouth is lovely. Your cheeks are like halves of a pomegranate.
+  Your two breasts are like two fawns, twins of a gazelle, that feed among the lilies.
+  Your lips distill nectar.
+  Honey and milk are under your tongue.
+  The scent of your garments is like the scent of Lebanon.
   */

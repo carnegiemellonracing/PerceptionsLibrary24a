@@ -82,7 +82,7 @@ radial_t min_height(vector<radial_t> bin) {
  * @param height_threshold: Keep all points this distance above the best fit line
  * @return std::vector<point_t>
  */
-std::vector<point_t> GAC(vector<point_t> cloud, double alpha, 
+void GAC(vector<point_t> cloud, double alpha, 
                          int num_bins, double height_threshold) {
   auto t1 = high_resolution_clock::now();
   auto t2 = high_resolution_clock::now();
@@ -124,6 +124,8 @@ std::vector<point_t> GAC(vector<point_t> cloud, double alpha,
     }
   }
   #endif
+
+  /*
 
   // Grace and Conrad Algorithm
   t1 = high_resolution_clock::now();
@@ -185,13 +187,14 @@ std::vector<point_t> GAC(vector<point_t> cloud, double alpha,
   printf("Seg2 Execution time: %f ms\n", duration<double, std::milli>(t2 - t1).count());
 
   return output;
+  */
 }
 
 // Test code
 int main() {
   std::vector<point_t> cloud;
   srand(time(0));
-  for (int i = 0; i < 1000000; i++) {
+  for (int i = 0; i < 300000; i++) {
     double x = static_cast<double>(rand()) / RAND_MAX * 30;
     double y = static_cast<double>(rand()) / RAND_MAX * 60 - 30;
     double z = static_cast<double>(rand()) / RAND_MAX * 10;
@@ -218,6 +221,9 @@ int main() {
   cloud.push_back({5, -20, 0});
   */
 
+  GAC(cloud, M_PI / 4, 2, 3);  
+
+  /*
   auto t1 = high_resolution_clock::now();
   vector<point_t> parsed_cloud = GAC(cloud, M_PI / 4, 2, 3);
   auto t2 = high_resolution_clock::now();
@@ -225,6 +231,7 @@ int main() {
   printf("Input cloud size: %d\n", cloud.size());
   printf("Output cloud size: %d\n", parsed_cloud.size());
   printf("Execution time: %f ms\n", duration<double, std::milli>(t2 - t1).count());
+  */
 
   #ifdef DEBUG
   for (int i = 0; i < parsed_cloud.size(); i++) {

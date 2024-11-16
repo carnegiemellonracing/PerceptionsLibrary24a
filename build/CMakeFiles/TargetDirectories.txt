@@ -1,0 +1,8 @@
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/build/CMakeFiles/math.dir
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/build/CMakeFiles/simple-c-setup.dir
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/build/CMakeFiles/googletest.dir
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/build/CMakeFiles/intake.dir
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/build/CMakeFiles/vox_test.dir
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/build/CMakeFiles/math_test.dir
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/build/CMakeFiles/edit_cache.dir
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/build/CMakeFiles/rebuild_cache.dir

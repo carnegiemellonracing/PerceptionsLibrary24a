@@ -4,7 +4,7 @@ cmake_minimum_required (VERSION 3.10)
 project(PerceptionsLibrary24a)
 
 # GoogleTest requires at least C++11
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 # Add definition for math library
 add_library(math src/math.cc)
@@ -47,6 +47,12 @@ include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
+include_directories(/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/cnpy)
+link_directories(/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/cnpy/build)
+add_executable(intake src/intake/intake.cpp)
+target_link_libraries(intake ${PCL_LIBRARIES} cnpy)
+add_executable(vox_test src/voxel_downsampling/vox_test.cpp)
+target_link_libraries(vox_test ${PCL_LIBRARIES})
 
 # Test
 add_executable(math_test test/math_test.cc)

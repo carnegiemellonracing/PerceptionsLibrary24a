@@ -1,0 +1,1 @@
+cmd='/opt/homebrew/Cellar/cmake/3.31.0/bin/cmake;-DCMAKE_INSTALL_PREFIX=/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/build/lib/installed;-GUnix Makefiles;-S;<SOURCE_DIR><SOURCE_SUBDIR>;-B;<BINARY_DIR>'

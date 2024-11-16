@@ -2,7 +2,11 @@
 #include <numeric>
 #include <algorithm>
 #include <vector>
+
+#define _USE_MATH_DEFINES
 #include <cmath>
+
+//#define DEBUG
 
 using namespace std;
 
@@ -75,8 +79,8 @@ radial_t min_height(vector<radial_t> bin) {
 std::vector<point_t> GAC(vector<point_t> cloud, double alpha, 
                          int num_bins, double height_threshold) {
 
-  const double angle_min = -0.5 * M_PI;
-  const double angle_max = 0.5 * M_PI;
+  const double angle_min = -0.6 * M_PI;
+  const double angle_max = 0.6 * M_PI;
   const double radius_max = 30;
   int num_segs = static_cast<int>((angle_max - angle_min) / alpha);
   vector<vector<vector<radial_t>>> segments(num_segs, vector<vector<radial_t>>(num_bins));
@@ -85,9 +89,13 @@ std::vector<point_t> GAC(vector<point_t> cloud, double alpha,
   // Parse all points from XYZ to radial,Z and separate into bins
   for (int i = 0; i < cloud.size(); i++) {
     radial_t rd = point2radial(cloud[i]);
-    int seg_index = static_cast<int>(rd.angle / alpha) + num_segs / 2 - (rd.angle < 0);
-    int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
-    segments[seg_index][bin_index].push_back(rd);
+    if (rd.radius < radius_max) {
+      int seg_index = static_cast<int>(rd.angle / alpha) + num_segs / 2 - (rd.angle < 0);
+      int bin_index = static_cast<int>(rd.radius / (radius_max / num_bins));
+      //printf("%f, %f\n", rd.radius, rd.angle);
+      //printf("(%d, %d)\n", seg_index, bin_index);
+      segments[seg_index][bin_index].push_back(rd);
+    }
   }
 
   #ifdef DEBUG
@@ -165,6 +173,15 @@ std::vector<point_t> GAC(vector<point_t> cloud, double alpha,
 // Test code
 int main() {
   std::vector<point_t> cloud;
+  srand(time(0));
+  for (int i = 0; i < 100000; i++) {
+    double x = static_cast<double>(rand()) / RAND_MAX * 30;
+    double y = static_cast<double>(rand()) / RAND_MAX * 60 - 30;
+    double z = static_cast<double>(rand()) / RAND_MAX * 10;
+    // printf("Pushed point (%f, %f, %f)\n", x, y, z);
+    cloud.push_back({x, y, z});
+  }
+  /*
   cloud.push_back({10, -5, 1});
   cloud.push_back({10, -5, 2});
   cloud.push_back({10, 5, 0});
@@ -182,11 +199,17 @@ int main() {
   cloud.push_back({20, 10.1, 7});
   cloud.push_back({20, 10.2, 8});
   cloud.push_back({5, -20, 0});
+  */
   vector<point_t> parsed_cloud = GAC(cloud, M_PI / 4, 2, 3);
 
+  printf("Input cloud size: %d\n", cloud.size());
+  printf("Output cloud size: %d\n", parsed_cloud.size());
+
+  #ifdef DEBUG
   for (int i = 0; i < parsed_cloud.size(); i++) {
     point_t pt = parsed_cloud[i];
     printf("(%f,%f,%f)\n", pt.x, pt.y, pt.z);
   }
+  #endif
 }
  

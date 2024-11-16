@@ -1,11 +1,13 @@
 #include <iostream>
+#include <fstream>
 #include <numeric>
 #include <algorithm>
 #include <vector>
+#include <chrono>
+#include <bits/stdc++.h>
 
 #define _USE_MATH_DEFINES
 #include <cmath>
-#include <chrono>
 
 //#define DEBUG
 
@@ -82,7 +84,7 @@ radial_t min_height(vector<radial_t> bin) {
  * @param height_threshold: Keep all points this distance above the best fit line
  * @return std::vector<point_t>
  */
-void GAC(vector<point_t> cloud, double alpha, 
+std::vector<point_t> GAC(vector<point_t> cloud, double alpha, 
                          int num_bins, double height_threshold) {
   auto t1 = high_resolution_clock::now();
   auto t2 = high_resolution_clock::now();
@@ -95,7 +97,6 @@ void GAC(vector<point_t> cloud, double alpha,
   vector<point_t> output;
 
   // Parse all points from XYZ to radial,Z and separate into bins
-  t1 = high_resolution_clock::now();
   int csize = cloud.size();
   for (int i = 0; i < csize; i++) {
     radial_t rd = point2radial(cloud[i]);
@@ -109,8 +110,6 @@ void GAC(vector<point_t> cloud, double alpha,
       segments[seg_index][bin_index].push_back(rd);
     }
   }
-  t2 = high_resolution_clock::now();
-  printf("Seg1 Execution time: %f ms\n", duration<double, std::milli>(t2 - t1).count());
 
   #ifdef DEBUG
   // Test code
@@ -125,10 +124,7 @@ void GAC(vector<point_t> cloud, double alpha,
   }
   #endif
 
-  /*
-
   // Grace and Conrad Algorithm
-  t1 = high_resolution_clock::now();
   for (int seg = 0; seg < num_segs; seg++) {
     // Extract minimum points in each bin
     // if (segments[seg].size() <= 1) continue;
@@ -183,61 +179,98 @@ void GAC(vector<point_t> cloud, double alpha,
       }
     }
   }
-  t2 = high_resolution_clock::now();
-  printf("Seg2 Execution time: %f ms\n", duration<double, std::milli>(t2 - t1).count());
 
   return output;
-  */
 }
 
 // Test code
 int main() {
-  std::vector<point_t> cloud;
-  srand(time(0));
-  for (int i = 0; i < 300000; i++) {
-    double x = static_cast<double>(rand()) / RAND_MAX * 30;
-    double y = static_cast<double>(rand()) / RAND_MAX * 60 - 30;
-    double z = static_cast<double>(rand()) / RAND_MAX * 10;
-    // printf("Pushed point (%f, %f, %f)\n", x, y, z);
-    cloud.push_back({x, y, z});
+
+  double sum = 0;
+
+  for (int i = 50; i < 243; i++) {
+    std::vector<point_t> cloud;
+    // Create a text string, which is used to output the text file
+    string buf;
+
+    // Read from the text file
+    printf("\nRunning GAC on dataset %d\n", i);
+    string file_name = "point_clouds/point_cloud_" + to_string(i) + ".csv";
+    ifstream point_data(file_name);
+
+    if (point_data.is_open() ) {
+      while (point_data.good() ) {
+        point_data >> buf;
+
+        vector<string> v;
+        stringstream ss(buf);
+    
+        while (ss.good()) {
+          string substr;
+          getline(ss, substr, ',');
+          v.push_back(substr);
+        }
+    
+        double x = stod(v.back());
+        v.pop_back();
+        double y = stod(v.back());
+        v.pop_back();
+        double z = stod(v.back());
+        v.pop_back();
+        cloud.push_back({x, y, z});
+      }
+    }
+
+    // Close the file
+    point_data.close();
+
+    /*
+    srand(time(0));
+    for (int i = 0; i < 300000; i++) {
+      double x = static_cast<double>(rand()) / RAND_MAX * 30;
+      double y = static_cast<double>(rand()) / RAND_MAX * 60 - 30;
+      double z = static_cast<double>(rand()) / RAND_MAX * 10;
+      // printf("Pushed point (%f, %f, %f)\n", x, y, z);
+      cloud.push_back({x, y, z});
+    }
+    */
+    /*
+    cloud.push_back({10, -5, 1});
+    cloud.push_back({10, -5, 2});
+    cloud.push_back({10, 5, 0});
+    cloud.push_back({10, 5.1, 1});
+    cloud.push_back({10, 5.2, 2});
+    cloud.push_back({10, 5.1, 3});
+    cloud.push_back({10, 5.2, 4});
+    cloud.push_back({10, 5.1, 5});
+    cloud.push_back({10, 5.2, 6});
+    cloud.push_back({10, 5.1, 7});
+    cloud.push_back({10, 5.2, 8});
+    cloud.push_back({20, 10.1, 1});
+    cloud.push_back({20, 10.1, 5});
+    cloud.push_back({20, 10.2, 6});
+    cloud.push_back({20, 10.1, 7});
+    cloud.push_back({20, 10.2, 8});
+    cloud.push_back({5, -20, 0});
+    */
+
+    auto t1 = high_resolution_clock::now();
+    vector<point_t> parsed_cloud = GAC(cloud, M_PI / 4, 2, 3);
+    auto t2 = high_resolution_clock::now();
+    double exe_time = duration<double, std::milli>(t2 - t1).count();
+    sum += exe_time / cloud.size();
+
+    printf("Input cloud size: %d\n", cloud.size());
+    printf("Output cloud size: %d\n", parsed_cloud.size());
+    printf("Execution time: %f ms\n", exe_time);
+
+    #ifdef DEBUG
+    for (int i = 0; i < parsed_cloud.size(); i++) {
+      point_t pt = parsed_cloud[i];
+      printf("(%f,%f,%f)\n", pt.x, pt.y, pt.z);
+    }
+    #endif
   }
-  /*
-  cloud.push_back({10, -5, 1});
-  cloud.push_back({10, -5, 2});
-  cloud.push_back({10, 5, 0});
-  cloud.push_back({10, 5.1, 1});
-  cloud.push_back({10, 5.2, 2});
-  cloud.push_back({10, 5.1, 3});
-  cloud.push_back({10, 5.2, 4});
-  cloud.push_back({10, 5.1, 5});
-  cloud.push_back({10, 5.2, 6});
-  cloud.push_back({10, 5.1, 7});
-  cloud.push_back({10, 5.2, 8});
-  cloud.push_back({20, 10.1, 1});
-  cloud.push_back({20, 10.1, 5});
-  cloud.push_back({20, 10.2, 6});
-  cloud.push_back({20, 10.1, 7});
-  cloud.push_back({20, 10.2, 8});
-  cloud.push_back({5, -20, 0});
-  */
-
-  GAC(cloud, M_PI / 4, 2, 3);  
-
-  /*
-  auto t1 = high_resolution_clock::now();
-  vector<point_t> parsed_cloud = GAC(cloud, M_PI / 4, 2, 3);
-  auto t2 = high_resolution_clock::now();
-
-  printf("Input cloud size: %d\n", cloud.size());
-  printf("Output cloud size: %d\n", parsed_cloud.size());
-  printf("Execution time: %f ms\n", duration<double, std::milli>(t2 - t1).count());
-  */
-
-  #ifdef DEBUG
-  for (int i = 0; i < parsed_cloud.size(); i++) {
-    point_t pt = parsed_cloud[i];
-    printf("(%f,%f,%f)\n", pt.x, pt.y, pt.z);
-  }
-  #endif
+  printf("\nAverage execution time: %fms/point\n", sum/(243-50+1));
 }
  

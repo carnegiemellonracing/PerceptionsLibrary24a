@@ -47,12 +47,20 @@ include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
+<<<<<<< Updated upstream
 include_directories(/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/cnpy)
 link_directories(/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/cnpy/build)
 add_executable(intake src/intake/intake.cpp)
 target_link_libraries(intake ${PCL_LIBRARIES} cnpy)
 add_executable(vox_test src/voxel_downsampling/vox_test.cpp)
 target_link_libraries(vox_test ${PCL_LIBRARIES})
+=======
+add_executable(vox_test src/voxel_downsampling/vox_test.cpp)
+target_link_libraries(vox_test ${PCL_LIBRARIES})
+
+find_package(Eigen3 3.4 REQUIRED )
+include_directories( ${EIGEN3_INCLUDE_DIR} )
+>>>>>>> Stashed changes
 
 # Test
 add_executable(math_test test/math_test.cc)

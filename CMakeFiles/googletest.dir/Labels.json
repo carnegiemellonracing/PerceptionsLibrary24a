@@ -11,6 +11,7 @@
 			"file" : "/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/CMakeFiles/googletest-complete.rule"
 		},
 		{
+<<<<<<< Updated upstream
 			"file" : "/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib/src/googletest-stamp/googletest-build.rule"
 		},
 		{
@@ -30,6 +31,27 @@
 		},
 		{
 			"file" : "/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib/src/googletest-stamp/googletest-update.rule"
+=======
+			"file" : "/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/\u201c/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib\u201d/src/googletest-stamp/googletest-build.rule"
+		},
+		{
+			"file" : "/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/\u201c/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib\u201d/src/googletest-stamp/googletest-configure.rule"
+		},
+		{
+			"file" : "/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/\u201c/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib\u201d/src/googletest-stamp/googletest-download.rule"
+		},
+		{
+			"file" : "/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/\u201c/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib\u201d/src/googletest-stamp/googletest-install.rule"
+		},
+		{
+			"file" : "/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/\u201c/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib\u201d/src/googletest-stamp/googletest-mkdir.rule"
+		},
+		{
+			"file" : "/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/\u201c/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib\u201d/src/googletest-stamp/googletest-patch.rule"
+		},
+		{
+			"file" : "/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/\u201c/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib\u201d/src/googletest-stamp/googletest-update.rule"
+>>>>>>> Stashed changes
 		}
 	],
 	"target" : 

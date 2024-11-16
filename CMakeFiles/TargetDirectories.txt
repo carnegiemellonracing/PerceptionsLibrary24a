@@ -1,6 +1,12 @@
 /Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/CMakeFiles/math.dir
+<<<<<<< Updated upstream
 /Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/CMakeFiles/simple-c-setup.dir
 /Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/CMakeFiles/googletest.dir
+=======
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/CMakeFiles/PerceptionsLibrary24a.dir
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/CMakeFiles/googletest.dir
+/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/CMakeFiles/vox_test.dir
+>>>>>>> Stashed changes
 /Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/CMakeFiles/math_test.dir
 /Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/CMakeFiles/edit_cache.dir
 /Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/CMakeFiles/rebuild_cache.dir

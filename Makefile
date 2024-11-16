@@ -130,6 +130,7 @@ math/fast:
 .PHONY : math/fast
 
 #=============================================================================
+<<<<<<< Updated upstream
 # Target rules for targets named simple-c-setup
 
 # Build rule for target.
@@ -141,6 +142,19 @@ simple-c-setup: cmake_check_build_system
 simple-c-setup/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/simple-c-setup.dir/build.make CMakeFiles/simple-c-setup.dir/build
 .PHONY : simple-c-setup/fast
+=======
+# Target rules for targets named PerceptionsLibrary24a
+
+# Build rule for target.
+PerceptionsLibrary24a: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 PerceptionsLibrary24a
+.PHONY : PerceptionsLibrary24a
+
+# fast build rule for target.
+PerceptionsLibrary24a/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PerceptionsLibrary24a.dir/build.make CMakeFiles/PerceptionsLibrary24a.dir/build
+.PHONY : PerceptionsLibrary24a/fast
+>>>>>>> Stashed changes
 
 #=============================================================================
 # Target rules for targets named googletest
@@ -156,6 +170,22 @@ googletest/fast:
 .PHONY : googletest/fast
 
 #=============================================================================
+<<<<<<< Updated upstream
+=======
+# Target rules for targets named vox_test
+
+# Build rule for target.
+vox_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 vox_test
+.PHONY : vox_test
+
+# fast build rule for target.
+vox_test/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vox_test.dir/build.make CMakeFiles/vox_test.dir/build
+.PHONY : vox_test/fast
+
+#=============================================================================
+>>>>>>> Stashed changes
 # Target rules for targets named math_test
 
 # Build rule for target.
@@ -173,7 +203,11 @@ src/main.o: src/main.cc.o
 
 # target to build an object file
 src/main.cc.o:
+<<<<<<< Updated upstream
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/simple-c-setup.dir/build.make CMakeFiles/simple-c-setup.dir/src/main.cc.o
+=======
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PerceptionsLibrary24a.dir/build.make CMakeFiles/PerceptionsLibrary24a.dir/src/main.cc.o
+>>>>>>> Stashed changes
 .PHONY : src/main.cc.o
 
 src/main.i: src/main.cc.i
@@ -181,7 +215,11 @@ src/main.i: src/main.cc.i
 
 # target to preprocess a source file
 src/main.cc.i:
+<<<<<<< Updated upstream
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/simple-c-setup.dir/build.make CMakeFiles/simple-c-setup.dir/src/main.cc.i
+=======
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PerceptionsLibrary24a.dir/build.make CMakeFiles/PerceptionsLibrary24a.dir/src/main.cc.i
+>>>>>>> Stashed changes
 .PHONY : src/main.cc.i
 
 src/main.s: src/main.cc.s
@@ -189,7 +227,11 @@ src/main.s: src/main.cc.s
 
 # target to generate assembly for a file
 src/main.cc.s:
+<<<<<<< Updated upstream
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/simple-c-setup.dir/build.make CMakeFiles/simple-c-setup.dir/src/main.cc.s
+=======
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/PerceptionsLibrary24a.dir/build.make CMakeFiles/PerceptionsLibrary24a.dir/src/main.cc.s
+>>>>>>> Stashed changes
 .PHONY : src/main.cc.s
 
 src/math.o: src/math.cc.o
@@ -216,6 +258,33 @@ src/math.cc.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/math.dir/build.make CMakeFiles/math.dir/src/math.cc.s
 .PHONY : src/math.cc.s
 
+<<<<<<< Updated upstream
+=======
+src/voxel_downsampling/vox_test.o: src/voxel_downsampling/vox_test.cpp.o
+.PHONY : src/voxel_downsampling/vox_test.o
+
+# target to build an object file
+src/voxel_downsampling/vox_test.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vox_test.dir/build.make CMakeFiles/vox_test.dir/src/voxel_downsampling/vox_test.cpp.o
+.PHONY : src/voxel_downsampling/vox_test.cpp.o
+
+src/voxel_downsampling/vox_test.i: src/voxel_downsampling/vox_test.cpp.i
+.PHONY : src/voxel_downsampling/vox_test.i
+
+# target to preprocess a source file
+src/voxel_downsampling/vox_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vox_test.dir/build.make CMakeFiles/vox_test.dir/src/voxel_downsampling/vox_test.cpp.i
+.PHONY : src/voxel_downsampling/vox_test.cpp.i
+
+src/voxel_downsampling/vox_test.s: src/voxel_downsampling/vox_test.cpp.s
+.PHONY : src/voxel_downsampling/vox_test.s
+
+# target to generate assembly for a file
+src/voxel_downsampling/vox_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/vox_test.dir/build.make CMakeFiles/vox_test.dir/src/voxel_downsampling/vox_test.cpp.s
+.PHONY : src/voxel_downsampling/vox_test.cpp.s
+
+>>>>>>> Stashed changes
 test/math_test.o: test/math_test.cc.o
 .PHONY : test/math_test.o
 
@@ -249,15 +318,28 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... googletest"
+<<<<<<< Updated upstream
 	@echo "... math"
 	@echo "... math_test"
 	@echo "... simple-c-setup"
+=======
+	@echo "... PerceptionsLibrary24a"
+	@echo "... math"
+	@echo "... math_test"
+	@echo "... vox_test"
+>>>>>>> Stashed changes
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
 	@echo "... src/math.o"
 	@echo "... src/math.i"
 	@echo "... src/math.s"
+<<<<<<< Updated upstream
+=======
+	@echo "... src/voxel_downsampling/vox_test.o"
+	@echo "... src/voxel_downsampling/vox_test.i"
+	@echo "... src/voxel_downsampling/vox_test.s"
+>>>>>>> Stashed changes
 	@echo "... test/math_test.o"
 	@echo "... test/math_test.i"
 	@echo "... test/math_test.s"

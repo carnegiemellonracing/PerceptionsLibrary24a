@@ -1,0 +1,8 @@
+set(__QT_DEPLOY_TARGET_math_FILE /Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/libmath.a)
+set(__QT_DEPLOY_TARGET_math_TYPE STATIC_LIBRARY)
+set(__QT_DEPLOY_TARGET_PerceptionsLibrary24a_FILE /Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/PerceptionsLibrary24a)
+set(__QT_DEPLOY_TARGET_PerceptionsLibrary24a_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_vox_test_FILE /Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/vox_test)
+set(__QT_DEPLOY_TARGET_vox_test_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_math_test_FILE /Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/math_test)
+set(__QT_DEPLOY_TARGET_math_test_TYPE EXECUTABLE)

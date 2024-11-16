@@ -1,5 +1,6 @@
 # Hashes of file build rules.
 0b5da8fbbc245364e42284e3453c59e5 CMakeFiles/googletest
+<<<<<<< Updated upstream
 27668e804aebb577039f44e2c569cee8 CMakeFiles/googletest-complete
 296f3423dab8ff7ffe43ef79449d9dcb lib/src/googletest-stamp/googletest-build
 8d61088c342edc8b4295a0a5da67ec20 lib/src/googletest-stamp/googletest-configure
@@ -8,3 +9,13 @@ dbb077eff83098aed0905de4212b7fbb lib/src/googletest-stamp/googletest-install
 0b6fc0d22324f7c29879c3f244447066 lib/src/googletest-stamp/googletest-mkdir
 54fbd3b2ee20a7700e6c5b3eb92427cf lib/src/googletest-stamp/googletest-patch
 d072a705abbeb0f009704f462c8e3af8 lib/src/googletest-stamp/googletest-update
+=======
+7f161ff5295e841fd2de6991d192fef2 CMakeFiles/googletest-complete
+f6868e710d101973fa8a8d82799a53b1 “/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib”/src/googletest-stamp/googletest-build
+423e564e51ecdcd72340c4c01b1663fe “/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib”/src/googletest-stamp/googletest-configure
+636e4c81cc43eb9769e3701f9c4c136b “/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib”/src/googletest-stamp/googletest-download
+c2a9ff53d29f176edbf68a3f89866f7b “/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib”/src/googletest-stamp/googletest-install
+1086d5e96be15c55f208fd531cc419bb “/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib”/src/googletest-stamp/googletest-mkdir
+cdae991c4c3fd6a0597f84a422a1e467 “/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib”/src/googletest-stamp/googletest-patch
+423ef702c5194ca5f1b92082125c69e2 “/Users/beeboss/Desktop/CMR/perceptions/PerceptionsLibrary24a/lib”/src/googletest-stamp/googletest-update
+>>>>>>> Stashed changes

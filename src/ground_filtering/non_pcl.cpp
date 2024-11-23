@@ -6,10 +6,13 @@
 #include <chrono>
 #include <bits/stdc++.h>
 
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+
 #define _USE_MATH_DEFINES
 #include <cmath>
 
-//#define DEBUG
+#define DEBUG
 //#define SUBTIMING
 
 using namespace std;
@@ -17,6 +20,7 @@ using std::chrono::high_resolution_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
 using std::chrono::milliseconds;
+using namespace pcl;
 
 typedef struct point {
   double x;
@@ -94,7 +98,7 @@ vector<point_t> GraceAndConrad(vector<point_t> cloud, double alpha,
 
   const double angle_min = -0.5 * M_PI;
   const double angle_max = 0.5 * M_PI;
-  const double radius_max = 20;
+  const double radius_max = 40;
   int num_segs = static_cast<int>((angle_max - angle_min) / alpha);
   vector<vector<vector<radial_t>>> segments(num_segs, vector<vector<radial_t>>(num_bins));
   vector<point_t> output;
@@ -127,23 +131,14 @@ vector<point_t> GraceAndConrad(vector<point_t> cloud, double alpha,
   // Test code
   int seg_size =  segments.size();
   for (int i = 0; i < seg_size; i++) {
-    for (int j = 0; j < segments[i].size(); j++) {
-      printf("Segbin (%d,%d):\n", i, j);
-      for (int k = 0; k < segments[i][j].size(); k++) {
-        printf("(%f,%f,%f)\n", segments[i][j][k].radius, segments[i][j][k].angle * 180 / M_PI, segments[i][j][k].z);
-      }
+    printf("Segment (%d): ", i);
+    if (i < 10) printf(" ");
+    for (int j = 0; j < num_bins; j++) {
+      printf("| %ld ", segments[i][j].size());
     }
+    printf("|\n");
   }
   #endif
-
-  /*
-  int seg_size =  segments.size();
-  for (int i = 0; i < seg_size; i++) {
-    for (int j = 0; j < segments[i].size(); j++) {
-      printf("Segbin (%d,%d): %d\n", i, j, segments[i][j].size());
-    }
-  }
-  */
 
   // Grace and Conrad Algorithm
   for (int seg = 0; seg < num_segs; seg++) {
@@ -166,13 +161,6 @@ vector<point_t> GraceAndConrad(vector<point_t> cloud, double alpha,
     #ifdef SUBTIMING 
     t2 = high_resolution_clock::now();
     printf("Sector 2a: %f ms\n", duration<double, std::milli>(t2 - t1).count());
-    #endif
-    
-    #ifdef DEBUG
-    for (int i = 0; i < minis_rad.size(); i++) {
-      int bin_index = static_cast<int>(minis_rad[i] / (radius_max / num_bins));
-      printf("Seg %d: mini at (%f,%f) in bin %d\n", seg, minis_rad[i], minis_z[i], bin_index);
-    }
     #endif
 
     #ifdef SUBTIMING
@@ -240,8 +228,10 @@ int main() {
 
     // Read from the text file
     printf("\nRunning GAC on dataset %d\n", i);
-    string file_name = "point_clouds/point_cloud_" + to_string(i) + ".csv";
+    string file_name = "../point_clouds/point_cloud_" + to_string(i) + ".csv";
     ifstream point_data(file_name);
+    file_name = "../point_clouds/parsed_point_cloud_" + to_string(i) + ".csv";
+    ofstream write_to(file_name);
 
     if (point_data.is_open() ) {
       while (point_data.good() ) {
@@ -262,42 +252,15 @@ int main() {
         v.pop_back();
         double z = stod(v.back());
         v.pop_back();
-        cloud.push_back({x, y, z});
+        // +y is forward
+        // +-z is left/right
+        // +x is up
+        cloud.push_back({y, z, x});
       }
     }
 
     // Close the file
     point_data.close();
-
-    /*
-    srand(time(0));
-    for (int i = 0; i < 300000; i++) {
-      double x = static_cast<double>(rand()) / RAND_MAX * 30;
-      double y = static_cast<double>(rand()) / RAND_MAX * 60 - 30;
-      double z = static_cast<double>(rand()) / RAND_MAX * 10;
-      // printf("Pushed point (%f, %f, %f)\n", x, y, z);
-      cloud.push_back({x, y, z});
-    }
-    */
-    /*
-    cloud.push_back({10, -5, 1});
-    cloud.push_back({10, -5, 2});
-    cloud.push_back({10, 5, 0});
-    cloud.push_back({10, 5.1, 1});
-    cloud.push_back({10, 5.2, 2});
-    cloud.push_back({10, 5.1, 3});
-    cloud.push_back({10, 5.2, 4});
-    cloud.push_back({10, 5.1, 5});
-    cloud.push_back({10, 5.2, 6});
-    cloud.push_back({10, 5.1, 7});
-    cloud.push_back({10, 5.2, 8});
-    cloud.push_back({20, 10.1, 1});
-    cloud.push_back({20, 10.1, 5});
-    cloud.push_back({20, 10.2, 6});
-    cloud.push_back({20, 10.1, 7});
-    cloud.push_back({20, 10.2, 8});
-    cloud.push_back({5, -20, 0});
-    */
 
     auto t1 = high_resolution_clock::now();
     vector<point_t> parsed_cloud = GraceAndConrad(cloud, 0.1, 10, 0.13);
@@ -309,12 +272,12 @@ int main() {
     printf("Output cloud size: %ld\n", parsed_cloud.size());
     printf("Execution time: %f ms\n", exe_time);
 
-    #ifdef DEBUG
-    for (int i = 0; i < parsed_cloud.size(); i++) {
-      point_t pt = parsed_cloud[i];
-      printf("(%f,%f,%f)\n", pt.x, pt.y, pt.z);
+    int sz = parsed_cloud.size();
+    for (int i = 0; i < sz; i++) {
+      write_to << to_string(parsed_cloud[i].z) + " " + to_string(parsed_cloud[i].x) + " " + to_string(parsed_cloud[i].y) + "\n";
     }
-    #endif
+    write_to.close();
+
   }
   printf("\nAverage execution time: %fms/point\n", sum/(243-50+1));
 }

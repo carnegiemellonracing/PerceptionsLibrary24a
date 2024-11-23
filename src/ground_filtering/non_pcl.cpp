@@ -10,6 +10,7 @@
 #include <cmath>
 
 //#define DEBUG
+//#define SUBTIMING
 
 using namespace std;
 using std::chrono::high_resolution_clock;
@@ -86,17 +87,22 @@ radial_t min_height(vector<radial_t> bin) {
  */
 vector<point_t> GraceAndConrad(vector<point_t> cloud, double alpha, 
                                int num_bins, double height_threshold) {
+  #ifdef SUBTIMING
   auto t1 = high_resolution_clock::now();
   auto t2 = high_resolution_clock::now();
+  #endif
 
   const double angle_min = -0.5 * M_PI;
   const double angle_max = 0.5 * M_PI;
-  const double radius_max = 30;
+  const double radius_max = 20;
   int num_segs = static_cast<int>((angle_max - angle_min) / alpha);
   vector<vector<vector<radial_t>>> segments(num_segs, vector<vector<radial_t>>(num_bins));
   vector<point_t> output;
 
+  #ifdef SUBTIMING
   t1 = high_resolution_clock::now();
+  #endif
+
   // Parse all points from XYZ to radial,Z and separate into bins
   int csize = cloud.size();
   for (int i = 0; i < csize; i++) {
@@ -111,8 +117,11 @@ vector<point_t> GraceAndConrad(vector<point_t> cloud, double alpha,
       segments[seg_index][bin_index].push_back(rd);   // This line is doubling the execution time of sector 1
     }
   }
+
+  #ifdef SUBTIMING 
   t2 = high_resolution_clock::now();
   printf("Sector 1: %f ms\n", duration<double, std::milli>(t2 - t1).count());
+  #endif
 
   #ifdef DEBUG
   // Test code
@@ -139,7 +148,11 @@ vector<point_t> GraceAndConrad(vector<point_t> cloud, double alpha,
   // Grace and Conrad Algorithm
   for (int seg = 0; seg < num_segs; seg++) {
     // Extract minimum points in each bin
+
+    #ifdef SUBTIMING
     t1 = high_resolution_clock::now();
+    #endif
+
     vector<double> minis_rad = {};
     vector<double> minis_z = {};
     for (int bin = 0; bin < num_bins; bin++) {
@@ -149,8 +162,11 @@ vector<point_t> GraceAndConrad(vector<point_t> cloud, double alpha,
         minis_z.push_back(mini.z);
       }
     }
+
+    #ifdef SUBTIMING 
     t2 = high_resolution_clock::now();
     printf("Sector 2a: %f ms\n", duration<double, std::milli>(t2 - t1).count());
+    #endif
     
     #ifdef DEBUG
     for (int i = 0; i < minis_rad.size(); i++) {
@@ -159,7 +175,10 @@ vector<point_t> GraceAndConrad(vector<point_t> cloud, double alpha,
     }
     #endif
 
+    #ifdef SUBTIMING
     t1 = high_resolution_clock::now();
+    #endif
+
     // Performing linear regression
     double sum_rad = 0;
     double sum_rad2 = 0;
@@ -182,10 +201,14 @@ vector<point_t> GraceAndConrad(vector<point_t> cloud, double alpha,
       slope = (n * sum_radz - sum_rad * sum_z) / (n * sum_rad2 - sum_rad * sum_rad);
       intercept = (sum_z - slope * sum_rad) / n;
     }
+    #ifdef SUBTIMING 
     t2 = high_resolution_clock::now();
     printf("Sector 2b: %f ms\n", duration<double, std::milli>(t2 - t1).count());
+    #endif
 
+    #ifdef SUBTIMING
     t1 = high_resolution_clock::now();
+    #endif
     // Convert all correct points to xyz and push to output vector
     for (int bin = 0; bin < num_bins; bin++) {
       for (int j = segments[seg][bin].size() - 1; j >= 0; j--) {
@@ -196,8 +219,10 @@ vector<point_t> GraceAndConrad(vector<point_t> cloud, double alpha,
         }
       }
     }
+    #ifdef SUBTIMING 
     t2 = high_resolution_clock::now();
     printf("Sector 2c: %f ms\n", duration<double, std::milli>(t2 - t1).count());
+    #endif
   }
 
   return output;
@@ -237,7 +262,7 @@ int main() {
         v.pop_back();
         double z = stod(v.back());
         v.pop_back();
-        cloud.push_back({x, z, y});
+        cloud.push_back({x, y, z});
       }
     }
 
@@ -275,13 +300,13 @@ int main() {
     */
 
     auto t1 = high_resolution_clock::now();
-    vector<point_t> parsed_cloud = GraceAndConrad(cloud, M_PI / 4, 2, 3);
+    vector<point_t> parsed_cloud = GraceAndConrad(cloud, 0.1, 10, 0.13);
     auto t2 = high_resolution_clock::now();
     double exe_time = duration<double, std::milli>(t2 - t1).count();
     sum += exe_time / cloud.size();
 
-    printf("Input cloud size: %d\n", cloud.size());
-    printf("Output cloud size: %d\n", parsed_cloud.size());
+    printf("Input cloud size: %ld\n", cloud.size());
+    printf("Output cloud size: %ld\n", parsed_cloud.size());
     printf("Execution time: %f ms\n", exe_time);
 
     #ifdef DEBUG

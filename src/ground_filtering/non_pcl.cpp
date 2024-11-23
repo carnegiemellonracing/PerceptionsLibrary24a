@@ -11,7 +11,7 @@
 
 //#define DEBUG
 
-using namespace std; 
+using namespace std;
 using std::chrono::high_resolution_clock;
 using std::chrono::duration_cast;
 using std::chrono::duration;
@@ -84,8 +84,8 @@ radial_t min_height(vector<radial_t> bin) {
  * @param height_threshold: Keep all points this distance above the best fit line
  * @return std::vector<point_t>
  */
-std::vector<point_t> GAC(vector<point_t> cloud, double alpha, 
-                         int num_bins, double height_threshold) {
+vector<point_t> GraceAndConrad(vector<point_t> cloud, double alpha, 
+                               int num_bins, double height_threshold) {
   auto t1 = high_resolution_clock::now();
   auto t2 = high_resolution_clock::now();
 
@@ -96,6 +96,7 @@ std::vector<point_t> GAC(vector<point_t> cloud, double alpha,
   vector<vector<vector<radial_t>>> segments(num_segs, vector<vector<radial_t>>(num_bins));
   vector<point_t> output;
 
+  t1 = high_resolution_clock::now();
   // Parse all points from XYZ to radial,Z and separate into bins
   int csize = cloud.size();
   for (int i = 0; i < csize; i++) {
@@ -107,9 +108,11 @@ std::vector<point_t> GAC(vector<point_t> cloud, double alpha,
         seg_index = 0;
       if (seg_index >= num_segs)
         seg_index = num_segs - 1;
-      segments[seg_index][bin_index].push_back(rd);
+      segments[seg_index][bin_index].push_back(rd);   // This line is doubling the execution time of sector 1
     }
   }
+  t2 = high_resolution_clock::now();
+  printf("Sector 1: %f ms\n", duration<double, std::milli>(t2 - t1).count());
 
   #ifdef DEBUG
   // Test code
@@ -124,10 +127,19 @@ std::vector<point_t> GAC(vector<point_t> cloud, double alpha,
   }
   #endif
 
+  /*
+  int seg_size =  segments.size();
+  for (int i = 0; i < seg_size; i++) {
+    for (int j = 0; j < segments[i].size(); j++) {
+      printf("Segbin (%d,%d): %d\n", i, j, segments[i][j].size());
+    }
+  }
+  */
+
   // Grace and Conrad Algorithm
   for (int seg = 0; seg < num_segs; seg++) {
     // Extract minimum points in each bin
-    // if (segments[seg].size() <= 1) continue;
+    t1 = high_resolution_clock::now();
     vector<double> minis_rad = {};
     vector<double> minis_z = {};
     for (int bin = 0; bin < num_bins; bin++) {
@@ -137,6 +149,8 @@ std::vector<point_t> GAC(vector<point_t> cloud, double alpha,
         minis_z.push_back(mini.z);
       }
     }
+    t2 = high_resolution_clock::now();
+    printf("Sector 2a: %f ms\n", duration<double, std::milli>(t2 - t1).count());
     
     #ifdef DEBUG
     for (int i = 0; i < minis_rad.size(); i++) {
@@ -145,6 +159,7 @@ std::vector<point_t> GAC(vector<point_t> cloud, double alpha,
     }
     #endif
 
+    t1 = high_resolution_clock::now();
     // Performing linear regression
     double sum_rad = 0;
     double sum_rad2 = 0;
@@ -167,7 +182,10 @@ std::vector<point_t> GAC(vector<point_t> cloud, double alpha,
       slope = (n * sum_radz - sum_rad * sum_z) / (n * sum_rad2 - sum_rad * sum_rad);
       intercept = (sum_z - slope * sum_rad) / n;
     }
+    t2 = high_resolution_clock::now();
+    printf("Sector 2b: %f ms\n", duration<double, std::milli>(t2 - t1).count());
 
+    t1 = high_resolution_clock::now();
     // Convert all correct points to xyz and push to output vector
     for (int bin = 0; bin < num_bins; bin++) {
       for (int j = segments[seg][bin].size() - 1; j >= 0; j--) {
@@ -178,6 +196,8 @@ std::vector<point_t> GAC(vector<point_t> cloud, double alpha,
         }
       }
     }
+    t2 = high_resolution_clock::now();
+    printf("Sector 2c: %f ms\n", duration<double, std::milli>(t2 - t1).count());
   }
 
   return output;
@@ -217,7 +237,7 @@ int main() {
         v.pop_back();
         double z = stod(v.back());
         v.pop_back();
-        cloud.push_back({x, y, z});
+        cloud.push_back({x, z, y});
       }
     }
 
@@ -255,7 +275,7 @@ int main() {
     */
 
     auto t1 = high_resolution_clock::now();
-    vector<point_t> parsed_cloud = GAC(cloud, M_PI / 4, 2, 3);
+    vector<point_t> parsed_cloud = GraceAndConrad(cloud, M_PI / 4, 2, 3);
     auto t2 = high_resolution_clock::now();
     double exe_time = duration<double, std::milli>(t2 - t1).count();
     sum += exe_time / cloud.size();

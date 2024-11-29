@@ -21,3 +21,6 @@ add_executable(grace_and_conrad main.cpp GraceAndConrad.cu)
 # Link CUDA
 target_link_libraries(grace_and_conrad ${CUDA_LIBRARIES})
 target_include_directories(grace_and_conrad PRIVATE ${CUDA_INCLUDE_DIRS})
+
+set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --extended-lambda")
+set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} --expt-relaxed-constexpr")

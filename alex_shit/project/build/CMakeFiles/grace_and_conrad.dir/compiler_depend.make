@@ -895,22 +895,7 @@ CMakeFiles/grace_and_conrad.dir/GraceAndConrad.cu.o: ../GraceAndConrad.cu \
   /usr/local/cuda-11.7/include/thrust/mr/new.h \
   /usr/local/cuda-11.7/include/thrust/mr/fancy_pointer_resource.h \
   /usr/local/cuda-11.7/include/thrust/system/cpp/pointer.h \
-  /usr/local/cuda-11.7/include/thrust/host_vector.h \
-  /usr/local/cuda-11.7/include/thrust/inner_product.h \
-  /usr/local/cuda-11.7/include/thrust/detail/inner_product.inl \
-  /usr/local/cuda-11.7/include/thrust/system/detail/generic/inner_product.h \
-  /usr/local/cuda-11.7/include/thrust/system/detail/generic/inner_product.inl \
-  /usr/local/cuda-11.7/include/thrust/system/detail/adl/inner_product.h \
-  /usr/local/cuda-11.7/include/thrust/system/detail/sequential/inner_product.h \
-  /usr/local/cuda-11.7/include/thrust/binary_search.h \
-  /usr/local/cuda-11.7/include/thrust/detail/binary_search.inl \
-  /usr/local/cuda-11.7/include/thrust/system/detail/generic/binary_search.h \
-  /usr/local/cuda-11.7/include/thrust/system/detail/generic/binary_search.inl \
-  /usr/local/cuda-11.7/include/thrust/system/detail/generic/scalar/binary_search.h \
-  /usr/local/cuda-11.7/include/thrust/system/detail/generic/scalar/binary_search.inl \
-  /usr/local/cuda-11.7/include/thrust/system/detail/adl/binary_search.h \
-  /usr/include/c++/11/algorithm \
-  /usr/include/c++/11/pstl/glue_algorithm_defs.h
+  /usr/local/cuda-11.7/include/thrust/host_vector.h
 
 CMakeFiles/grace_and_conrad.dir/main.cpp.o: ../main.cpp \
   /usr/include/stdc-predef.h \
@@ -1511,6 +1496,7 @@ CMakeFiles/grace_and_conrad.dir/main.cpp.o: ../main.cpp \
   /usr/local/cuda-11.7/include/thrust/mr/new.h \
   /usr/local/cuda-11.7/include/thrust/mr/fancy_pointer_resource.h \
   /usr/local/cuda-11.7/include/thrust/system/cpp/pointer.h \
+  ../Point.hpp \
   ../external/csv-parser-2.3.0/single_include/csv.hpp \
   /usr/include/c++/11/algorithm \
   /usr/include/c++/11/pstl/glue_algorithm_defs.h \
@@ -1669,23 +1655,7 @@ CMakeFiles/grace_and_conrad.dir/main.cpp.o: ../main.cpp \
 
 /usr/include/c++/11/pstl/glue_algorithm_defs.h:
 
-/usr/local/cuda-11.7/include/thrust/system/detail/adl/binary_search.h:
-
-/usr/local/cuda-11.7/include/thrust/system/detail/generic/scalar/binary_search.h:
-
-/usr/local/cuda-11.7/include/thrust/system/detail/generic/binary_search.inl:
-
-/usr/local/cuda-11.7/include/thrust/system/detail/generic/binary_search.h:
-
-/usr/local/cuda-11.7/include/thrust/binary_search.h:
-
-/usr/local/cuda-11.7/include/thrust/system/detail/sequential/inner_product.h:
-
-/usr/local/cuda-11.7/include/thrust/system/detail/adl/inner_product.h:
-
-/usr/local/cuda-11.7/include/thrust/system/detail/generic/inner_product.h:
-
-/usr/local/cuda-11.7/include/thrust/detail/inner_product.inl:
+../Point.hpp:
 
 /usr/local/cuda-11.7/include/thrust/host_vector.h:
 
@@ -1742,8 +1712,6 @@ CMakeFiles/grace_and_conrad.dir/main.cpp.o: ../main.cpp \
 /usr/local/cuda-11.7/include/thrust/system/detail/generic/unique_by_key.h:
 
 /usr/local/cuda-11.7/include/thrust/system/cuda/detail/unique.h:
-
-/usr/local/cuda-11.7/include/thrust/system/detail/generic/inner_product.inl:
 
 /usr/local/cuda-11.7/include/thrust/system/cuda/detail/transform_scan.h:
 
@@ -1930,8 +1898,6 @@ CMakeFiles/grace_and_conrad.dir/main.cpp.o: ../main.cpp \
 /usr/local/cuda-11.7/include/thrust/detail/copy_if.inl:
 
 /usr/local/cuda-11.7/include/thrust/detail/copy_if.h:
-
-/usr/local/cuda-11.7/include/thrust/system/detail/generic/scalar/binary_search.inl:
 
 /usr/local/cuda-11.7/include/thrust/system/cuda/detail/copy_if.h:
 
@@ -2845,8 +2811,6 @@ CMakeFiles/grace_and_conrad.dir/main.cpp.o: ../main.cpp \
 
 /usr/include/c++/11/cfloat:
 
-/usr/local/cuda-11.7/include/thrust/inner_product.h:
-
 /usr/include/c++/11/iostream:
 
 /usr/include/x86_64-linux-gnu/bits/uintn-identity.h:
@@ -2888,8 +2852,6 @@ CMakeFiles/grace_and_conrad.dir/main.cpp.o: ../main.cpp \
 /usr/local/cuda-11.7/include/thrust/system/detail/generic/transform.inl:
 
 /usr/include/c++/11/cstdlib:
-
-/usr/local/cuda-11.7/include/thrust/detail/binary_search.inl:
 
 /usr/include/c++/11/math.h:
 

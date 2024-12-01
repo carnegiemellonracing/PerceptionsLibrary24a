@@ -129,6 +129,30 @@ grace_and_conrad/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/grace_and_conrad.dir/build.make CMakeFiles/grace_and_conrad.dir/build
 .PHONY : grace_and_conrad/fast
 
+DBscan.o: DBscan.cu.o
+.PHONY : DBscan.o
+
+# target to build an object file
+DBscan.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/grace_and_conrad.dir/build.make CMakeFiles/grace_and_conrad.dir/DBscan.cu.o
+.PHONY : DBscan.cu.o
+
+DBscan.i: DBscan.cu.i
+.PHONY : DBscan.i
+
+# target to preprocess a source file
+DBscan.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/grace_and_conrad.dir/build.make CMakeFiles/grace_and_conrad.dir/DBscan.cu.i
+.PHONY : DBscan.cu.i
+
+DBscan.s: DBscan.cu.s
+.PHONY : DBscan.s
+
+# target to generate assembly for a file
+DBscan.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/grace_and_conrad.dir/build.make CMakeFiles/grace_and_conrad.dir/DBscan.cu.s
+.PHONY : DBscan.cu.s
+
 GraceAndConrad.o: GraceAndConrad.cu.o
 .PHONY : GraceAndConrad.o
 
@@ -152,6 +176,30 @@ GraceAndConrad.s: GraceAndConrad.cu.s
 GraceAndConrad.cu.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/grace_and_conrad.dir/build.make CMakeFiles/grace_and_conrad.dir/GraceAndConrad.cu.s
 .PHONY : GraceAndConrad.cu.s
+
+IntensityCluster.o: IntensityCluster.cu.o
+.PHONY : IntensityCluster.o
+
+# target to build an object file
+IntensityCluster.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/grace_and_conrad.dir/build.make CMakeFiles/grace_and_conrad.dir/IntensityCluster.cu.o
+.PHONY : IntensityCluster.cu.o
+
+IntensityCluster.i: IntensityCluster.cu.i
+.PHONY : IntensityCluster.i
+
+# target to preprocess a source file
+IntensityCluster.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/grace_and_conrad.dir/build.make CMakeFiles/grace_and_conrad.dir/IntensityCluster.cu.i
+.PHONY : IntensityCluster.cu.i
+
+IntensityCluster.s: IntensityCluster.cu.s
+.PHONY : IntensityCluster.s
+
+# target to generate assembly for a file
+IntensityCluster.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/grace_and_conrad.dir/build.make CMakeFiles/grace_and_conrad.dir/IntensityCluster.cu.s
+.PHONY : IntensityCluster.cu.s
 
 main.o: main.cpp.o
 .PHONY : main.o
@@ -186,9 +234,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... grace_and_conrad"
+	@echo "... DBscan.o"
+	@echo "... DBscan.i"
+	@echo "... DBscan.s"
 	@echo "... GraceAndConrad.o"
 	@echo "... GraceAndConrad.i"
 	@echo "... GraceAndConrad.s"
+	@echo "... IntensityCluster.o"
+	@echo "... IntensityCluster.i"
+	@echo "... IntensityCluster.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

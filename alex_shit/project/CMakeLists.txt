@@ -15,8 +15,17 @@ include_directories(${CSV_PARSER_INCLUDE_DIR})
 # Add CUDA files
 enable_language(CUDA)
 
-# Add executable
-add_executable(grace_and_conrad main.cpp GraceAndConrad.cu)
+# Set the sources to pull from
+set(SOURCES
+    main.cpp
+    GraceAndConrad.cu
+    IntensityCluster.cu
+    DBscan.cu
+
+)
+
+# Add executable and link CUDA
+add_executable(grace_and_conrad ${SOURCES})
 
 # Link CUDA
 target_link_libraries(grace_and_conrad ${CUDA_LIBRARIES})

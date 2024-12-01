@@ -21,14 +21,14 @@
 
 
 #define MAX_DISTANCE 40.0f // Maximum allowable distance
-#define ERROR_MARGIN 0.1f  // Outlier threshold
-#define MAX_HEIGHT 0.5f
+#define ERROR_MARGIN 0.15f  // Outlier threshold
+#define MAX_HEIGHT 0.4f
 
 struct Point {
-    float x, y, z;
+    float x, y, z, intensity;
 
     __host__ __device__
-    Point(float x = 0, float y = 0, float z = 0) : x(x), y(y), z(z) {}
+    Point(float x = 0, float y = 0, float z = 0, float intensity = 0) : x(x), y(y), z(z), intensity(intensity) {}
 };
 
 
@@ -52,8 +52,6 @@ __global__ void assignToGrid(
 
     if (range > MAX_DISTANCE) return; // Discard points further than MAX_DISTANCE
 
-    // if (isnan(p.x) || isnan(p.y) || isnan(p.z)) return; // Ignore invalid points
-    // if (isinf(p.x) || isinf(p.y) || isinf(p.z)) return; // Ignore invalid points
 
     segments[idx] = min(static_cast<int>((angle - angle_min) / (angle_max - angle_min) * num_segments), num_segments - 1);
     bins[idx] = min(static_cast<int>((range - range_min) / (range_max - range_min) * num_bins), num_bins - 1);

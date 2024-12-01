@@ -1,4 +1,6 @@
 #include "GraceAndConrad.hpp"
+#include "IntensityCluster.hpp"
+#include "DBscan.hpp"
 #include "external/csv-parser-2.3.0/single_include/csv.hpp"
 #include <cuda_runtime.h>
 #include <iostream>
@@ -18,11 +20,12 @@ int main(int argc, char **argv) {
         float x = row["x"].get<float>();
         float y = row["y"].get<float>();
         float z = row["z"].get<float>();
-        points.push_back(Point(x, y, z));
+        float intensity = row["intensity"].get<float>();
+        points.push_back(Point(x, y, z, intensity));
     }
 
     float alpha = 0.1f;
-    int num_bins = 250;
+    int num_bins = 100;
     float height_threshold = 0.5f;
 
 
@@ -39,30 +42,54 @@ int main(int argc, char **argv) {
     // Print the number of results
     std::cout << "Number of filtered points: " << result.size() << std::endl;
 
-    // std::cout << "Filtered points:" << std::endl;
-    // for (const auto &p : result) {
-    //     std::cout << p.x << "," << p.y << "," << p.z << std::endl;
-    // }
+    // Call the clustering algorithm
+    
+    
+    
+    
 
-    // Output CSV file
+    // DBSCAN
+    
+    std::vector<Point> std_points(result.begin(), result.end());
+
+    int min_samples = 2;
+    float eps = 0.3f;
+    auto cone_clusters = runDBSCAN(std_points, eps, min_samples); // Call your coloring function here
+    std::cout << "Number of clusters: " << cone_clusters.size() << std::endl;
+
+
+
+    // Cone Coloring
+
+
+    // Call the coloring algorithm
+    std::cout << "Running cone coloring algorithm..." << std::endl;
+    std::vector<Point> new_points(cone_clusters.begin(), cone_clusters.end());
+
+
+    auto cone_colors = ClusterCones(new_points);  // Call your coloring function here
+
+    // Write results to CSV
     std::string output_csv_file = argv[2];
     std::ofstream outfile(output_csv_file);
-
     if (!outfile.is_open()) {
         std::cerr << "Failed to open output CSV file: " << output_csv_file << std::endl;
         return 1;
     }
 
     // Write CSV header
-    outfile << "x,y,z\n";
+    outfile << "x,y,z,intensity,color\n";
 
-    // Write filtered points to the output CSV file
-    for (const auto &p : result) {
-        outfile << p.x << "," << p.y << "," << p.z << "\n";
+    // Write colored points to the output CSV file
+    for (size_t i = 0; i < cone_colors.size(); ++i) {
+        const auto& pair = cone_colors[i];
+        const auto& p = pair.first; // Access the Point
+        const auto& color = pair.second; // Access the color
+        outfile << p.x << "," << p.y << "," << p.z << "," << p.intensity << "," << color << "\n";
     }
 
     outfile.close();
-    std::cout << "Filtered points written to " << output_csv_file << std::endl;
+    std::cout << "Colored points written to " << output_csv_file << std::endl;
 
     return 0;
 }

@@ -279,28 +279,44 @@ def visualise(points):
     plt.show()
 
 
+# def parse_csv_file(file_path):
+#     with open(file_path, mode='r') as file:
+#         csvFile = csv.reader(file)
+#         all_lines = []
+#         for line in csvFile: 
+#             if line[0] != 'x' and len(line) == 3:
+#                 all_lines.append(line)
+            
+#     raw_points = []
+#     for i in range(len(all_lines)):
+#         line = [float(s) for s in all_lines[i]]
+#         # line = np.array(line)
+#         # line = line.transpose([1,0,2])
+#         raw_points.append(line)
+    
+#     return np.array(raw_points)
+
+
+# points only
 def parse_csv_file(file_path):
     with open(file_path, mode='r') as file:
         csvFile = csv.reader(file)
         all_lines = []
-        for line in csvFile: 
-            if line[0] != 'x' and len(line) == 3:
-                all_lines.append(line)
-            
-    raw_points = []
-    for i in range(len(all_lines)):
-        line = [float(s) for s in all_lines[i]]
-        # line = np.array(line)
-        # line = line.transpose([1,0,2])
-        raw_points.append(line)
+        for line in csvFile:
+            # Ensure the line has at least 3 numeric values (ignoring header and extra columns)
+            if line[0] != 'x' and len(line) >= 3:
+                # Parse x, y, z only
+                x, y, z = float(line[0]), float(line[1]), float(line[2])
+                all_lines.append([x, y, z])
     
-    return np.array(raw_points)
+    # Convert the collected points to a numpy array
+    return np.array(all_lines)
 
 
 
 
 
-# file_path = 'alex_shit/point_clouds/point_cloud_221.csv'
+# file_path = 'alex_shit/point_clouds/intensity_2.csv'
 # raw_point_cloud = parse_csv_file(file_path)
 # processed_data_frame = fov_range(raw_point_cloud, 0, 40)
 # ground_filtered_points = grace_and_conrad_filtering(processed_data_frame)
@@ -311,9 +327,9 @@ file_path = 'alex_shit/project/build/output.csv'
 
 ground_filtered_points = parse_csv_file(file_path)
 
-clusters = predict_cones_z(ground_filtered_points)
+# clusters = predict_cones_z(ground_filtered_points)
 
 
 
-visualise(clusters)
+visualise(ground_filtered_points)
 

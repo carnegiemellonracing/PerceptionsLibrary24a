@@ -1,6 +1,10 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/grace_and_conrad.dir/DBscan.cu.o"
+  "CMakeFiles/grace_and_conrad.dir/DBscan.cu.o.d"
   "CMakeFiles/grace_and_conrad.dir/GraceAndConrad.cu.o"
   "CMakeFiles/grace_and_conrad.dir/GraceAndConrad.cu.o.d"
+  "CMakeFiles/grace_and_conrad.dir/IntensityCluster.cu.o"
+  "CMakeFiles/grace_and_conrad.dir/IntensityCluster.cu.o.d"
   "CMakeFiles/grace_and_conrad.dir/main.cpp.o"
   "CMakeFiles/grace_and_conrad.dir/main.cpp.o.d"
   "grace_and_conrad"

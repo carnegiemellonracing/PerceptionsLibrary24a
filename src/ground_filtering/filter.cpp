@@ -264,7 +264,7 @@ int main() {
       // +y is forward
       // +-z is left/right
       // +x is up
-      cloud.push_back({y, x, z});
+      cloud.push_back({y, z, x});
       vis_to << to_string(x) + "," + to_string(y) + "," + to_string(z) + "\n";
     }
   }

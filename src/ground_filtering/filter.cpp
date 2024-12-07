@@ -265,8 +265,10 @@ int main() {
       // +-z is left/right
       // +x is up
       cloud.push_back({y, x, z});
+      vis_to << to_string(x) + "," + to_string(y) + "," + to_string(z) + "\n";
     }
   }
+  vis_to.close();
 
   // Close the file
   point_data.close();

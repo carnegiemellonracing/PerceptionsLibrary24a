@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pandas
 
 def main():
-  cnum = 190
+  cnum = 150
   points = pandas.read_csv('point_clouds/parsed_point_cloud_' + str(cnum) + '.csv')
 
   fig = plt.figure()

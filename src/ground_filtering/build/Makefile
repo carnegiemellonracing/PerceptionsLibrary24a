@@ -117,41 +117,41 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named nonpcl
+# Target rules for targets named filter
 
 # Build rule for target.
-nonpcl: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 nonpcl
-.PHONY : nonpcl
+filter: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 filter
+.PHONY : filter
 
 # fast build rule for target.
-nonpcl/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/nonpcl.dir/build.make CMakeFiles/nonpcl.dir/build
-.PHONY : nonpcl/fast
+filter/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/filter.dir/build.make CMakeFiles/filter.dir/build
+.PHONY : filter/fast
 
-non_pcl.o: non_pcl.cpp.o
-.PHONY : non_pcl.o
+filter.o: filter.cpp.o
+.PHONY : filter.o
 
 # target to build an object file
-non_pcl.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/nonpcl.dir/build.make CMakeFiles/nonpcl.dir/non_pcl.cpp.o
-.PHONY : non_pcl.cpp.o
+filter.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/filter.dir/build.make CMakeFiles/filter.dir/filter.cpp.o
+.PHONY : filter.cpp.o
 
-non_pcl.i: non_pcl.cpp.i
-.PHONY : non_pcl.i
+filter.i: filter.cpp.i
+.PHONY : filter.i
 
 # target to preprocess a source file
-non_pcl.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/nonpcl.dir/build.make CMakeFiles/nonpcl.dir/non_pcl.cpp.i
-.PHONY : non_pcl.cpp.i
+filter.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/filter.dir/build.make CMakeFiles/filter.dir/filter.cpp.i
+.PHONY : filter.cpp.i
 
-non_pcl.s: non_pcl.cpp.s
-.PHONY : non_pcl.s
+filter.s: filter.cpp.s
+.PHONY : filter.s
 
 # target to generate assembly for a file
-non_pcl.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/nonpcl.dir/build.make CMakeFiles/nonpcl.dir/non_pcl.cpp.s
-.PHONY : non_pcl.cpp.s
+filter.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/filter.dir/build.make CMakeFiles/filter.dir/filter.cpp.s
+.PHONY : filter.cpp.s
 
 # Help Target
 help:
@@ -161,10 +161,10 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... nonpcl"
-	@echo "... non_pcl.o"
-	@echo "... non_pcl.i"
-	@echo "... non_pcl.s"
+	@echo "... filter"
+	@echo "... filter.o"
+	@echo "... filter.i"
+	@echo "... filter.s"
 .PHONY : help
 
 

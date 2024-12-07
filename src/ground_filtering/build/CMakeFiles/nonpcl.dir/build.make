@@ -69,28 +69,28 @@ include CMakeFiles/nonpcl.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/nonpcl.dir/flags.make
 
-CMakeFiles/nonpcl.dir/non_pcl.cpp.o: CMakeFiles/nonpcl.dir/flags.make
-CMakeFiles/nonpcl.dir/non_pcl.cpp.o: ../non_pcl.cpp
-CMakeFiles/nonpcl.dir/non_pcl.cpp.o: CMakeFiles/nonpcl.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/perceptions/PerceptionsLibrary24a/src/ground_filtering/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/nonpcl.dir/non_pcl.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/nonpcl.dir/non_pcl.cpp.o -MF CMakeFiles/nonpcl.dir/non_pcl.cpp.o.d -o CMakeFiles/nonpcl.dir/non_pcl.cpp.o -c /home/perceptions/PerceptionsLibrary24a/src/ground_filtering/non_pcl.cpp
+CMakeFiles/nonpcl.dir/filter.cpp.o: CMakeFiles/nonpcl.dir/flags.make
+CMakeFiles/nonpcl.dir/filter.cpp.o: ../filter.cpp
+CMakeFiles/nonpcl.dir/filter.cpp.o: CMakeFiles/nonpcl.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/perceptions/PerceptionsLibrary24a/src/ground_filtering/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/nonpcl.dir/filter.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/nonpcl.dir/filter.cpp.o -MF CMakeFiles/nonpcl.dir/filter.cpp.o.d -o CMakeFiles/nonpcl.dir/filter.cpp.o -c /home/perceptions/PerceptionsLibrary24a/src/ground_filtering/filter.cpp
 
-CMakeFiles/nonpcl.dir/non_pcl.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/nonpcl.dir/non_pcl.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/perceptions/PerceptionsLibrary24a/src/ground_filtering/non_pcl.cpp > CMakeFiles/nonpcl.dir/non_pcl.cpp.i
+CMakeFiles/nonpcl.dir/filter.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/nonpcl.dir/filter.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/perceptions/PerceptionsLibrary24a/src/ground_filtering/filter.cpp > CMakeFiles/nonpcl.dir/filter.cpp.i
 
-CMakeFiles/nonpcl.dir/non_pcl.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/nonpcl.dir/non_pcl.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/perceptions/PerceptionsLibrary24a/src/ground_filtering/non_pcl.cpp -o CMakeFiles/nonpcl.dir/non_pcl.cpp.s
+CMakeFiles/nonpcl.dir/filter.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/nonpcl.dir/filter.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/perceptions/PerceptionsLibrary24a/src/ground_filtering/filter.cpp -o CMakeFiles/nonpcl.dir/filter.cpp.s
 
 # Object files for target nonpcl
 nonpcl_OBJECTS = \
-"CMakeFiles/nonpcl.dir/non_pcl.cpp.o"
+"CMakeFiles/nonpcl.dir/filter.cpp.o"
 
 # External object files for target nonpcl
 nonpcl_EXTERNAL_OBJECTS =
 
-nonpcl: CMakeFiles/nonpcl.dir/non_pcl.cpp.o
+nonpcl: CMakeFiles/nonpcl.dir/filter.cpp.o
 nonpcl: CMakeFiles/nonpcl.dir/build.make
 nonpcl: /usr/lib/x86_64-linux-gnu/libpcl_apps.so
 nonpcl: /usr/lib/x86_64-linux-gnu/libpcl_outofcore.so

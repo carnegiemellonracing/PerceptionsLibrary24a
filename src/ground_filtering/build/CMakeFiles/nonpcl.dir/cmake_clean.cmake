@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/nonpcl.dir/non_pcl.cpp.o"
-  "CMakeFiles/nonpcl.dir/non_pcl.cpp.o.d"
+  "CMakeFiles/nonpcl.dir/filter.cpp.o"
+  "CMakeFiles/nonpcl.dir/filter.cpp.o.d"
   "nonpcl"
   "nonpcl.pdb"
 )

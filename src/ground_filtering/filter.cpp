@@ -238,6 +238,9 @@ int main() {
   ifstream point_data(file_name);
   file_name = "../point_clouds/parsed_point_cloud_" + to_string(i) + ".csv";
   ofstream write_to(file_name);
+  file_name = "../point_clouds/vis_point_cloud_" + to_string(i) + ".csv";
+  ofstream vis_to(file_name);
+  vis_to << "x,y,z\n";
 
   if (point_data.is_open() ) {
     while (point_data.good() ) {
@@ -261,7 +264,7 @@ int main() {
       // +y is forward
       // +-z is left/right
       // +x is up
-      cloud.push_back({y, z, x});
+      cloud.push_back({y, x, z});
     }
   }
 

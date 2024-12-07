@@ -3,9 +3,7 @@ import matplotlib.pyplot as plt
 import pandas
 
 def main():
-  fnum = 190
-
-  points = pandas.read_csv('point_clouds/parsed_point_cloud_' + str(fnum) + '.csv')
+  points = pandas.read_csv('point_clouds/parsed_point_cloud_50.csv')
 
   fig = plt.figure()
   ax = fig.add_subplot(111, projection='3d')
@@ -25,7 +23,7 @@ def main():
 
   plt.show()
   
-  points2 = pandas.read_csv('point_clouds/vis_point_cloud_' + str(fnum) + '.csv')
+  points2 = pandas.read_csv('point_clouds/vis_point_cloud_50.csv')
 
   fig2 = plt.figure()
   ax2 = fig2.add_subplot(111, projection='3d')

@@ -41,7 +41,7 @@ typedef struct radial {
  * @param pt: The (x,y,z) point to convert
  * @return the converted point
  */
-radial_t point2radial(PointXYZ pt) {
+radial_t point2radial(PointXYZRGB pt) {
   radial_t rd;
   rd.angle = std::atan2(pt.y, pt.x);
   rd.radius = std::sqrt(pt.x * pt.x + pt.y * pt.y);
@@ -54,11 +54,14 @@ radial_t point2radial(PointXYZ pt) {
  * @param rd: The (radius,ang,z) point to convert
  * @return the converted point
  */
-PointXYZ radial2point(radial_t rd) {
-  PointXYZ pt;
+PointXYZRGB radial2point(radial_t rd) {
+  PointXYZRGB pt;
   pt.x = rd.radius * cos(rd.angle);
   pt.y = rd.radius * sin(rd.angle);
   pt.z = rd.z;
+  pt.r = 0;
+  pt.g = 0;
+  pt.b = 0;
   return pt;
 }
 
@@ -91,7 +94,7 @@ radial_t min_height(vector<radial_t> bin) {
  * @param height_threshold: Keep all points this distance above the best fit line
  * @return A point cloud of ground-filtered points
  */
-PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double alpha, 
+PointCloud<PointXYZRGB> GraceAndConrad(PointCloud<PointXYZRGB> cloud, double alpha, 
                                     int num_bins, double height_threshold) {
   #ifdef SUBTIMING
   auto t1 = high_resolution_clock::now();
@@ -103,13 +106,13 @@ PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double alpha,
   const double radius_max = 40;
   int num_segs = static_cast<int>((angle_max - angle_min) / alpha);
   vector<vector<vector<radial_t>>> segments(num_segs, vector<vector<radial_t>>(num_bins));
-  PointCloud<PointXYZ> output;
+  PointCloud<PointXYZRGB> output;
 
   #ifdef SUBTIMING
   t1 = high_resolution_clock::now();
   #endif
 
-  // Parse all points from XYZ to radial,Z and separate into bins
+  // Parse all points from XYZRGB to radial,Z and separate into bins
   int csize = cloud.points.size();
   for (int i = 0; i < csize; i++) {
   radial_t rd = point2radial(cloud.points[i]);
@@ -199,7 +202,7 @@ PointCloud<PointXYZ> GraceAndConrad(PointCloud<PointXYZ> cloud, double alpha,
   #ifdef SUBTIMING
   t1 = high_resolution_clock::now();
   #endif
-  // Convert all correct points to xyz and push to output vector
+  // Convert all correct points to XYZRGB and push to output vector
   for (int bin = 0; bin < num_bins; bin++) {
     for (int j = segments[seg][bin].size() - 1; j >= 0; j--) {
     radial_t pt = segments[seg][bin][j];
@@ -225,7 +228,7 @@ int main() {
   double points_sum = 0;
 
   for (int i = 50; i < 243; i++) {
-  PointCloud<PointXYZ> cloud;
+  PointCloud<PointXYZRGB> cloud;
   // Create a text string, which is used to output the text file
   string buf;
 
@@ -238,27 +241,27 @@ int main() {
 
   if (point_data.is_open() ) {
     while (point_data.good() ) {
-    point_data >> buf;
+      point_data >> buf;
 
-    vector<string> v;
-    stringstream ss(buf);
-  
-    while (ss.good()) {
-      string substr;
-      getline(ss, substr, ',');
-      v.push_back(substr);
-    }
-  
-    float x = stof(v.back());
-    v.pop_back();
-    float y = stof(v.back());
-    v.pop_back();
-    float z = stof(v.back());
-    v.pop_back();
-    // +y is forward
-    // +-z is left/right
-    // +x is up
-    cloud.push_back({y, z, x});
+      vector<string> v;
+      stringstream ss(buf);
+    
+      while (ss.good()) {
+        string substr;
+        getline(ss, substr, ',');
+        v.push_back(substr);
+      }
+    
+      float x = stof(v.back());
+      v.pop_back();
+      float y = stof(v.back());
+      v.pop_back();
+      float z = stof(v.back());
+      v.pop_back();
+      // +y is forward
+      // +-z is left/right
+      // +x is up
+      cloud.push_back({y, z, x});
     }
   }
 
@@ -266,7 +269,7 @@ int main() {
   point_data.close();
 
   auto t1 = high_resolution_clock::now();
-  PointCloud<PointXYZ> parsed_cloud = GraceAndConrad(cloud, 0.1, 10, 0.13);
+  PointCloud<PointXYZRGB> parsed_cloud = GraceAndConrad(cloud, 0.1, 10, 0.13);
   auto t2 = high_resolution_clock::now();
   double exe_time = duration<double, std::milli>(t2 - t1).count();
   time_sum += exe_time;

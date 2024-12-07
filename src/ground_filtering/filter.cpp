@@ -261,7 +261,7 @@ int main() {
       // +y is forward
       // +-z is left/right
       // +x is up
-      cloud.push_back({y, z, x});
+      cloud.push_back({y, x, z});
     }
   }
 

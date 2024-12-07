@@ -9,10 +9,11 @@ def main():
 
   fig = plt.figure()
   ax = fig.add_subplot(111, projection='3d')
+  
 
   x = points['y'].values
   y = points['z'].values
-  z = points['z'].values
+  z = points['x'].values
 
   #  x   y   z  
   # 1.1,1.2,1.3
@@ -32,6 +33,9 @@ def main():
   x2 = points2['y'].values
   y2 = points2['z'].values
   z2 = points2['x'].values
+
+  plt.xlabel("x")
+  plt.ylabel("y")
 
   #  x   y   z  
   # 1.1,1.2,1.3

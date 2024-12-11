@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from sklearn import cluster
 import time
 import csv 
+import os
 
 ### Filtering Algorithm - G&C ###
 
@@ -143,8 +144,18 @@ HDBSCAN Clustering Algorithm
     clusterer.labels_ - each element is the cluster label. Noisy points assigned -1
 '''
 def run_dbscan(points, eps=0.5, min_samples=1):
+
+    start_time = time.time()
+
+
     clusterer = cluster.DBSCAN(eps=eps, min_samples=min_samples)
     clusterer.fit(points)
+
+
+    end_time = time.time()
+
+    elapsed_time_ms = (end_time - start_time) * 1000
+    print(f"Execution time for DBSCAN: {elapsed_time_ms:.3f} ms")
 
     return clusterer
 
@@ -313,23 +324,31 @@ def parse_csv_file(file_path):
     return np.array(all_lines)
 
 
+print(os.getcwd())
 
 
 
-# file_path = 'alex_shit/point_clouds/intensity_2.csv'
-# raw_point_cloud = parse_csv_file(file_path)
-# processed_data_frame = fov_range(raw_point_cloud, 0, 40)
-# ground_filtered_points = grace_and_conrad_filtering(processed_data_frame)
+file_path = 'alex_shit/point_clouds/point_cloud_73.csv'
+# FOR AFS
+# file_path = 'point_clouds/intensity_1.csv'
+
+
+raw_point_cloud = parse_csv_file(file_path)
+processed_data_frame = fov_range(raw_point_cloud, 0, 40)
+
+
+ground_filtered_points = grace_and_conrad_filtering(processed_data_frame)
+
+# file_path = 'alex_shit/project/build/output.csv'
+
+# clusters = parse_csv_file(file_path)
+
+
+clusters = predict_cones_z(ground_filtered_points)
 
 
 
-file_path = 'alex_shit/project/build/output.csv'
-
-ground_filtered_points = parse_csv_file(file_path)
-
-# clusters = predict_cones_z(ground_filtered_points)
 
 
-
-visualise(ground_filtered_points)
+visualise(clusters)
 

@@ -1,214 +1,203 @@
-#include <cuda_runtime.h>
 #include <vector>
 #include <cmath>
+#include <string>
+#include <algorithm>
 #include <thrust/device_vector.h>
 #include <thrust/host_vector.h>
-#include <thrust/sort.h>
-#include <thrust/partition.h>
-#include <thrust/reduce.h>
-#include <iostream>
+#include "Point.hpp"
 
-#define NUM_BINS 25
-#define KMEANS_MAX_ITER 100
-#define KMEANS_EPSILON 1e-4
-#define MAX_RADIUS 40.0f
+// Global constants
+const float EPS = 5.5f;       // Large `eps` for clustering
+const int MIN_SAMPLES = 3;    // Minimum points for a valid cluster
+const float TRACK_WIDTH = 3.0f; // Approximate track width for labeling
 
-struct Point {
-    float x, y, z, intensity;
+// CUDA kernel to compute pairwise distances for DBSCAN
+__global__ void computePairwiseDistances(const Point* points, int num_points, float* distances) {
+    int i = blockIdx.x * blockDim.x + threadIdx.x;
+    int j = blockIdx.y * blockDim.y + threadIdx.y;
 
-    __host__ __device__
-    Point(float x = 0, float y = 0, float z = 0, float intensity = 0)
-        : x(x), y(y), z(z), intensity(intensity) {}
-};
-
-// CUDA kernel to calculate the radius and assign bins
-__global__ void assignBins(const Point* points, int* bin_indices, int num_points, float bin_size) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx >= num_points) return;
-
-    float radius = sqrtf(points[idx].x * points[idx].x + points[idx].y * points[idx].y);
-    bin_indices[idx] = min(static_cast<int>(radius / bin_size), NUM_BINS - 1);
+    if (i < num_points && j < num_points && i != j) {
+        float dx = points[i].x - points[j].x;
+        float dy = points[i].y - points[j].y;
+        float dist = sqrtf(dx * dx + dy * dy);
+        distances[i * num_points + j] = dist;
+    }
 }
 
-// CUDA kernel for k-Means clustering (one iteration per call)
-__global__ void kMeansUpdate(const Point* points, const int* bin_indices, const int* cluster_assignments,
-                             float* cluster_sums, int* cluster_counts, int num_points, int num_bins) {
-    int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx >= num_points) return;
 
-    int bin_idx = bin_indices[idx];
-    int cluster = cluster_assignments[idx];
-    atomicAdd(&cluster_sums[bin_idx * 2 + cluster], points[idx].intensity);
-    atomicAdd(&cluster_counts[bin_idx * 2 + cluster], 1);
+// Compute midline by fitting a spline (simplified as averaging)
+std::vector<Point> computeMidline(const std::vector<Point>& points, const std::vector<int>& cluster) {
+    std::vector<Point> midline;
+    for (int idx : cluster) {
+        midline.push_back(points[idx]);
+    }
+    return midline; // In practice, a cubic spline fit would be applied here
 }
 
-// Host function for k-Means clustering within bins
-std::vector<int> performKMeans(const std::vector<Point>& points, const std::vector<int>& bin_indices, int num_bins) {
-    int num_points = points.size();
-    thrust::device_vector<Point> d_points(points.begin(), points.end());
-    thrust::device_vector<int> d_bin_indices(bin_indices.begin(), bin_indices.end());
-    thrust::device_vector<int> d_cluster_assignments(num_points, 0);
-    thrust::device_vector<float> d_cluster_means(num_bins * 2, 0.0f);
+// Label cones as "blue" or "yellow"
+std::vector<std::pair<Point, std::string>> labelCones(const std::vector<Point>& points, const std::vector<Point>& midline, const std::vector<int>& cluster) {
+    std::vector<std::pair<Point, std::string>> labeled_cones;
 
-    // Initialize means to min and max intensities for each bin
-    std::vector<float> initial_means(num_bins * 2, 0.0f);
-    for (int b = 0; b < num_bins; ++b) {
-        float min_intensity = INFINITY, max_intensity = -INFINITY;
-        for (int i = 0; i < num_points; ++i) {
-            if (bin_indices[i] == b) {
-                min_intensity = fminf(min_intensity, points[i].intensity);
-                max_intensity = fmaxf(max_intensity, points[i].intensity);
+    for (int idx : cluster) {
+        const auto& point = points[idx];
+        float min_dist = INFINITY;
+        Point closest_midline_point;
+
+        for (const auto& midline_point : midline) {
+            float dx = point.x - midline_point.x;
+            float dy = point.y - midline_point.y;
+            float dist = sqrtf(dx * dx + dy * dy);
+
+            if (dist < min_dist) {
+                min_dist = dist;
+                closest_midline_point = midline_point;
             }
         }
-        initial_means[b * 2] = min_intensity;
-        initial_means[b * 2 + 1] = max_intensity;
+
+        if (min_dist <= TRACK_WIDTH / 2) {
+            float dx = point.x - closest_midline_point.x;
+            std::string label = (dx > 0) ? "blue" : "yellow";
+            labeled_cones.emplace_back(point, label);
+        }
     }
-    d_cluster_means = initial_means;
 
-    thrust::device_vector<float> d_new_means(num_bins * 2, 0.0f);
-    thrust::device_vector<int> d_cluster_counts(num_bins * 2, 0);
+    return labeled_cones;
+}
 
-    for (int iter = 0; iter < KMEANS_MAX_ITER; ++iter) {
-        thrust::fill(d_cluster_counts.begin(), d_cluster_counts.end(), 0);
-        thrust::fill(d_new_means.begin(), d_new_means.end(), 0.0f);
 
-        dim3 block(256);
-        dim3 grid((num_points + block.x - 1) / block.x);
+std::vector<std::vector<int>> NewRunDBSCAN(const std::vector<Point>& points, float eps, int min_samples) {
+    int num_points = points.size();
+    std::vector<std::vector<int>> clusters;
 
-        kMeansUpdate<<<grid, block>>>(
-            thrust::raw_pointer_cast(d_points.data()),
-            thrust::raw_pointer_cast(d_bin_indices.data()),
-            thrust::raw_pointer_cast(d_cluster_assignments.data()),
-            thrust::raw_pointer_cast(d_new_means.data()),
-            thrust::raw_pointer_cast(d_cluster_counts.data()),
-            num_points, num_bins);
+    // Create visited and labels arrays
+    std::vector<bool> visited(num_points, false);
+    std::vector<int> labels(num_points, -1);  // -1 means noise
+    int cluster_id = 0;
 
-        // Update means
-        for (int b = 0; b < num_bins; ++b) {
-            for (int k = 0; k < 2; ++k) {
-                int count = d_cluster_counts[b * 2 + k];
-                if (count > 0) {
-                    d_cluster_means[b * 2 + k] = d_new_means[b * 2 + k] / count;
+    // Helper lambda to calculate distance
+    auto distance = [](const Point& a, const Point& b) {
+        float dx = a.x - b.x;
+        float dy = a.y - b.y;
+        float dz = a.z - b.z;
+        return sqrtf(dx * dx + dy * dy + dz * dz);
+    };
+
+    // Helper function to find neighbors
+    auto get_neighbors = [&](int idx) {
+        std::vector<int> neighbors;
+        for (int i = 0; i < num_points; ++i) {
+            if (i != idx && distance(points[idx], points[i]) <= eps) {
+                neighbors.push_back(i);
+            }
+        }
+        return neighbors;
+    };
+
+    // Main DBSCAN logic
+    for (int i = 0; i < num_points; ++i) {
+        if (visited[i]) continue;
+        visited[i] = true;
+
+        // Find neighbors
+        auto neighbors = get_neighbors(i);
+        if (neighbors.size() < min_samples) {
+            labels[i] = -1;  // Mark as noise
+            continue;
+        }
+
+        // Create a new cluster
+        clusters.emplace_back();
+        labels[i] = cluster_id;
+        clusters[cluster_id].push_back(i);
+
+        // Expand the cluster
+        std::vector<int> to_process = neighbors;
+        while (!to_process.empty()) {
+            int current = to_process.back();
+            to_process.pop_back();
+
+            if (!visited[current]) {
+                visited[current] = true;
+
+                // Get neighbors of the current point
+                auto current_neighbors = get_neighbors(current);
+                if (current_neighbors.size() >= min_samples) {
+                    to_process.insert(to_process.end(), current_neighbors.begin(), current_neighbors.end());
                 }
             }
+
+            if (labels[current] == -1 || labels[current] == -2) {
+                labels[current] = cluster_id;
+                clusters[cluster_id].push_back(current);
+            }
         }
+
+        cluster_id++;
     }
 
-     return std::vector<int>(d_cluster_assignments.begin(), d_cluster_assignments.end());
+    return clusters;
 }
 
 
 
-void printIntensitiesPerBin(const std::vector<Point>& points, const std::vector<int>& bin_indices, int num_bins) {
-    // Create a container for each bin
-    std::vector<std::vector<float>> bins(num_bins);
-
-    // Group intensities by bin
-    for (size_t i = 0; i < points.size(); ++i) {
-        int bin = bin_indices[i];
-        if (bin >= 0 && bin < num_bins) {
-            bins[bin].push_back(points[i].intensity);
-        }
-    }
-
-    // Print intensities for each bin
-    for (int b = 0; b < num_bins; ++b) {
-        std::cout << "Bin " << b << ": ";
-        for (float intensity : bins[b]) {
-            std::cout << intensity << " ";
-        }
-        std::cout << std::endl;
-    }
-}
-
-
-// // Host function for color assignment
-// std::vector<std::pair<Point, std::string>> ClusterCones(const std::vector<Point>& points) {
-//     int num_points = points.size();
-//     float bin_size = MAX_RADIUS / NUM_BINS;
-
-//     thrust::host_vector<int> bin_indices(num_points);
-//     thrust::device_vector<Point> d_points(points.begin(), points.end());
-//     thrust::device_vector<int> d_bin_indices(num_points);
-
-//     dim3 block(256);
-//     dim3 grid((num_points + block.x - 1) / block.x);
-
-//     assignBins<<<grid, block>>>(thrust::raw_pointer_cast(d_points.data()), thrust::raw_pointer_cast(d_bin_indices.data()), num_points, bin_size);
-//     bin_indices = d_bin_indices;
-
-
-//     // Convert thrust::host_vector<int> to std::vector<int>
-//     std::vector<int> bin_indices_std(bin_indices.begin(), bin_indices.end());
-
-
-
-//     // Print intensities per bin
-//     printIntensitiesPerBin(points, bin_indices_std, NUM_BINS);
-
-
-//     // Perform k-Means clustering
-//     std::vector<int> cluster_assignments = performKMeans(points, bin_indices_std, NUM_BINS);
-
-//     std::vector<std::pair<Point, std::string>> colored_points;
-//     for (int i = 0; i < num_points; ++i) {
-//         std::string color = (cluster_assignments[i] == 0) ? "Blue" : "Yellow"; // Assign color
-//         colored_points.emplace_back(points[i], color); // Pair the point with the color
-//     }
-
-//     return colored_points;
-
-// }
-
-
-
-
+// Main pipeline
 std::vector<std::pair<Point, std::string>> ClusterCones(const std::vector<Point>& points) {
-    int num_points = points.size();
-    float bin_size = MAX_RADIUS / NUM_BINS;
+    // Step 1: Run DBSCAN with large eps using the new implementation
+    auto clusters = NewRunDBSCAN(points, EPS, MIN_SAMPLES);
 
-    thrust::host_vector<int> bin_indices(num_points);
-    thrust::device_vector<Point> d_points(points.begin(), points.end());
-    thrust::device_vector<int> d_bin_indices(num_points);
+    // Step 2: Find the cluster closest to the origin
+    int best_cluster_idx = -1;
+    float min_dist_to_origin = INFINITY;
 
-    dim3 block(256);
-    dim3 grid((num_points + block.x - 1) / block.x);
-
-    // Step 1: Assign bins
-    assignBins<<<grid, block>>>(thrust::raw_pointer_cast(d_points.data()), thrust::raw_pointer_cast(d_bin_indices.data()), num_points, bin_size);
-    bin_indices = d_bin_indices;
-
-    // Convert thrust::host_vector<int> to std::vector<int>
-    std::vector<int> bin_indices_std(bin_indices.begin(), bin_indices.end());
-
-    // Step 2: Compute average intensity for each bin
-    std::vector<float> bin_sums(NUM_BINS, 0.0f);
-    std::vector<int> bin_counts(NUM_BINS, 0);
-
-    for (int i = 0; i < num_points; ++i) {
-        int bin = bin_indices_std[i];
-        if (bin >= 0 && bin < NUM_BINS) {
-            bin_sums[bin] += points[i].intensity;
-            bin_counts[bin]++;
+    for (size_t i = 0; i < clusters.size(); ++i) {
+        for (size_t j = 0; j < clusters[i].size(); ++j) {
+            int idx = clusters[i][j];
+            const Point& p = points[idx];
+            float dist_to_origin = sqrtf(p.x * p.x + p.y * p.y);
+            if (dist_to_origin < min_dist_to_origin) {
+                min_dist_to_origin = dist_to_origin;
+                best_cluster_idx = i;
+            }
         }
     }
 
-    std::vector<float> bin_averages(NUM_BINS, 0.0f);
-    for (int b = 0; b < NUM_BINS; ++b) {
-        if (bin_counts[b] > 0) {
-            bin_averages[b] = bin_sums[b] / bin_counts[b];
+    if (best_cluster_idx == -1) {
+        return {};
+    }
+
+    // Step 3: Compute midline
+    std::vector<Point> midline;
+    for (size_t i = 0; i < clusters[best_cluster_idx].size(); ++i) {
+        int idx = clusters[best_cluster_idx][i];
+        midline.push_back(points[idx]);
+    }
+
+    // Step 4: Label cones
+    std::vector<std::pair<Point, std::string>> labeled_cones;
+    for (size_t i = 0; i < clusters[best_cluster_idx].size(); ++i) {
+        int idx = clusters[best_cluster_idx][i];
+        const Point& point = points[idx];
+        float min_dist = INFINITY;
+        Point closest_midline_point;
+
+        for (size_t j = 0; j < midline.size(); ++j) {
+            const Point& midline_point = midline[j];
+            float dx = point.x - midline_point.x;
+            float dy = point.y - midline_point.y;
+            float dist = sqrtf(dx * dx + dy * dy);
+
+            if (dist < min_dist) {
+                min_dist = dist;
+                closest_midline_point = midline_point;
+            }
+        }
+
+        if (min_dist <= TRACK_WIDTH / 2) {
+            float dx = point.x - closest_midline_point.x;
+            std::string label = (dx > 0) ? "blue" : "yellow";
+            labeled_cones.emplace_back(point, label);
         }
     }
 
-    // Step 3: Assign colors based on average intensity
-    std::vector<std::pair<Point, std::string>> colored_points;
-    for (int i = 0; i < num_points; ++i) {
-        int bin = bin_indices_std[i];
-        if (bin >= 0 && bin < NUM_BINS) {
-            std::string color = (points[i].intensity > bin_averages[bin]) ? "Yellow" : "Blue";
-            colored_points.emplace_back(points[i], color);
-        }
-    }
-
-    return colored_points;
+    return labeled_cones;
 }

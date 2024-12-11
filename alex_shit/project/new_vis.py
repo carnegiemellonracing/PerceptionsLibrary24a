@@ -22,8 +22,8 @@ def parse_and_visualize_clusters(csv_file_path):
     point_colors = data['color'].values  # 'color' column contains the assigned color (e.g., 'blue', 'yellow')
 
     # Split points by color
-    blue_points = true_points[point_colors == 'Blue']
-    yellow_points = true_points[point_colors == 'Yellow']
+    blue_points = true_points[point_colors == 'blue']
+    yellow_points = true_points[point_colors == 'yellow']
 
     # Visualize points
     fig = plt.figure()

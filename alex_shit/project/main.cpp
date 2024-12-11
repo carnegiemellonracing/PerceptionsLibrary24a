@@ -20,16 +20,25 @@ int main(int argc, char **argv) {
         float x = row["x"].get<float>();
         float y = row["y"].get<float>();
         float z = row["z"].get<float>();
-        float intensity = row["intensity"].get<float>();
+        float intensity = 0; // Default intensity value
+
+        try {
+            intensity = row["intensity"].get<float>();
+        } catch (const std::exception &e) {
+            // Intensity column is missing; default value of 0 will be used
+        }
+
         points.push_back(Point(x, y, z, intensity));
     }
 
     float alpha = 0.1f;
     int num_bins = 100;
-    float height_threshold = 0.5f;
+    float height_threshold = 0.05f;
 
 
     auto start = std::chrono::high_resolution_clock::now();
+
+    std::cout << "Number of raw points: " << points.size() << std::endl;
 
     auto result = GraceAndConrad(points, alpha, num_bins, height_threshold);
 

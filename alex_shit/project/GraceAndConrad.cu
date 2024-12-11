@@ -301,3 +301,4 @@ thrust::host_vector<Point> GraceAndConrad(
         return thrust::host_vector<Point>();
     }
 }
+

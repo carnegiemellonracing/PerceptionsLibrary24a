@@ -328,7 +328,7 @@ print(os.getcwd())
 
 
 
-file_path = 'alex_shit/point_clouds/point_cloud_73.csv'
+file_path = 'point_clouds/intensity_1.csv'
 # FOR AFS
 # file_path = 'point_clouds/intensity_1.csv'
 

@@ -5,7 +5,7 @@ import numpy as np
 
 # Top-level variables to control display
 DISPLAY_MIDLINE = True
-DISPLAY_SECTION_CIRCLES = True
+DISPLAY_SECTION_CIRCLES = False
 
 def plot_circle(ax, center, radius, num_points=100):
     """

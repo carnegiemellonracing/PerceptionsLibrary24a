@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
     
     
 
-    // DBSCAN
+    // // DBSCAN
     
     std::vector<Point> std_points(result.begin(), result.end());
 
@@ -96,6 +96,7 @@ int main(int argc, char **argv) {
         const auto& color = pair.second; // Access the color
         outfile << p.x << "," << p.y << "," << p.z << "," << p.intensity << "," << color << "\n";
     }
+
 
     outfile.close();
     std::cout << "Colored points written to " << output_csv_file << std::endl;

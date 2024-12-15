@@ -339,7 +339,7 @@ processed_data_frame = fov_range(raw_point_cloud, 0, 40)
 
 ground_filtered_points = grace_and_conrad_filtering(processed_data_frame)
 
-# file_path = 'alex_shit/project/build/output.csv'
+# file_path = 'project/build/output.csv'
 
 # clusters = parse_csv_file(file_path)
 

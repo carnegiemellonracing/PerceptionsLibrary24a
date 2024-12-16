@@ -1,0 +1,3 @@
+/afs/andrew.cmu.edu/usr17/ablasber/private/15418/finalproj/alex_shit/final_project/project/build/CMakeFiles/perceptions.dir
+/afs/andrew.cmu.edu/usr17/ablasber/private/15418/finalproj/alex_shit/final_project/project/build/CMakeFiles/edit_cache.dir
+/afs/andrew.cmu.edu/usr17/ablasber/private/15418/finalproj/alex_shit/final_project/project/build/CMakeFiles/rebuild_cache.dir

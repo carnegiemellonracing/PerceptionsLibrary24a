@@ -1,3 +1,0 @@
-/afs/andrew.cmu.edu/usr17/ablasber/private/15418/finalproj/alex_shit/project/build/CMakeFiles/grace_and_conrad.dir
-/afs/andrew.cmu.edu/usr17/ablasber/private/15418/finalproj/alex_shit/project/build/CMakeFiles/edit_cache.dir
-/afs/andrew.cmu.edu/usr17/ablasber/private/15418/finalproj/alex_shit/project/build/CMakeFiles/rebuild_cache.dir
